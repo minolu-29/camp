@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "app.vercel.camp_minolu1.twa",
-        "sha256_cert_fingerprints": ["D3:8F:A5:EB:51:05:2E:92:32:00:5D:18:D1:B1:34:D5:31:38:A0:18:B0:56:F0:7E:A7:61:5E:64:CB:E2:1A:6C"]
-      }
-    }]
