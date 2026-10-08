@@ -3,6 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+/* 読み込みエラー診断バナー(本編スクリプトより先に読み込む) */
+window.addEventListener('error', function(e){
+  try{
+    if(!e || !e.message) return;
+    var b = document.getElementById('jsErrBanner');
+    if(!b){
+      b = document.createElement('div');
+      b.id = 'jsErrBanner';
+      b.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99999;background:#b3261e;color:#fff;padding:10px 14px;font:13px/1.6 sans-serif;';
+      (document.body || document.documentElement).appendChild(b);
+    }
+    b.textContent = '⚠️ 読み込みエラー: ' + e.message + (e.lineno ? '(行 ' + e.lineno + ')' : '') +
+      ' / ファイルが途中で切れている可能性があります。Ctrl+F5で更新しても直らない場合は、この表示を撮影して教えてください。';
+  }catch(_){}
+});
+</script>
 <title>キャンプギア図鑑 | CAMP LAB</title>
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAACy0lEQVR4nNWWy05TURSG/7V2WwqlPZU0ihKMIRIhSES5RJ1hgsaYqInEGEMwQjBEZ04Z+hb6BMaZT+ADmDhyohNnyk3sKT23fVkOqqDQ0jIoCTtrck72+df+8q+z16LRR9No50pB2qqPlLQ5wxEQSNsJ2pzgUPpEAA53pBQOY4J1AMB0iAQMQdMQAQO+xu1T5u5pU07ANY4WolWTrUNXlhf6dYbk/UbaxI6oJfaWCBTBj3DvAs6ROePsg2H4ERS1RMACOTgA0VaKOVkccR2+zvj66bAt5SUxgmbfCoSb7mESP5TZMR5Mm9erXW/WOgfYPLrCfihMTfWlSZkSkBiUclieoi+f3atfBQJufPOXJujdR1RipLiJE00ImMSPZG6ce7vhrUcvitXnJ6rFzbjUifkJrsTNIQ4iIEKk0e9hfkoFa1qF9mVPBUA1RHXVzE2l336yq9vIqIN+PT6gAhRJNZYn49zbQ8EPLQYVoYqQWITfk5JHC5Mc1CAai3AjOABBgvMlPB5XYSDY0GAwwAApYNOE2+7hZTV0koIY1LieGnrAkCCRxSnVU6C4bF3ZkqI/x1LkfBP71uumpascaSE0drHuewKqsVzspdlLKtSgLS2xA+/WliSCnybQuD+qxvpoO5ZGEPU8ECFIbOTZNZXvhHaw63q/e25dG4dcB5avK23+QtTzYO+qleZYH98ZUX4EiZ3eNI7JCnbCKUo2jUSuHOHWkJo8y+VQmPaLSZ27yAkUycpMurtA+RwVApuPrJeBp+Cl4KXgKXhpFGJbqBovx53dtDKTzii4enVEAzcn9vy6TpBN0/SgIgiYXMXaLUPq/8ZBEAtVTHFBwQmIPny11UTUviuWBmYmsGcRRFCJBQAJoAg19X/7TO3RAlaEAEE+S0R1ule9jiYgoJjdEWzYMkjtpnNSfwBqeFXYVrpJC3uOYqo49pPdcZ9NfwMCa7dserWJuQAAAABJRU5ErkJggg==">
 <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABUklEQVR4nJVSwUrDUBCcfUmTtMW2Koh4EayVigoFoRdB8ODRkwgiFfSo4MeJFz+gIPgd9qJSrcakyWveeGibtppLl3d5sLOzOzOyd36Eecqm4ZwAZgAEAJA5KYNBAE0AsCUDY9OY6b8l+NRyspYowX3HquSY8A9gaiUBEgPHkbv1yBI8vhcSTczyKBqmT4HdkBd18xy4T77bqptuSAXO9HBcIPWAJY+Xu9gOw3oYtnZQyUMPCE5KwRDj8b3AnDZUzTWbOqrpqOqYs4bqBWZIMuxU6fhIs+zxuml9d+LASED5eomvmmrRQ6QnJCrd3u+bmwN7a1XUq15ysezCetPVFbk9tPy+SS8ZqaQHKLko5fHQjv2OiLIB8IPFdrzgqrIHPaAIAMjG8X6q6U+MhJDcWEgBNS1BwclymkDRgQAkR9kAxAWBaW9njEuSrPT8i8Z8af0F9vLyFwr7HxYAAAAASUVORK5CYII=">
@@ -83,6 +100,14 @@
     white-space:nowrap;
   }
   .badge-toast.show{ bottom:24px; }
+  #loadWarn{
+    position:fixed;left:0;right:0;bottom:0;z-index:99998;
+    background:#b3261e;color:#fff;padding:12px 16px;
+    font:13px/1.6 sans-serif;text-align:center;
+    opacity:0;pointer-events:none;
+    animation:loadWarnIn .01s 2s forwards;
+  }
+  @keyframes loadWarnIn{ to{ opacity:1; pointer-events:auto; } }
   /* ---------- Tabs ---------- */
   nav.tabs{
     display:flex;
@@ -377,6 +402,7 @@
 </style>
 </head>
 <body>
+<div id="loadWarn">⚠️ アプリの読み込みが完了していません。index.html が途中で切れている可能性があります。GitHubに最新のファイルを丸ごと上書きアップロードし、Ctrl+F5で更新してください。</div>
 
 <header class="hero">
   <div class="hero-top">
@@ -596,7 +622,7 @@
 
 </main>
 
-<footer>CAMP LAB — つくって、燃やして、たたむまで。</footer>
+<footer>CAMP LAB — つくって、燃やして、たたむまで。<br><span style="opacity:.7">v2026.10.08</span></footer>
 
 <script>
 /* ---------------- タブ切り替え ---------------- */
@@ -1221,4 +1247,178 @@ function renderSites(){
         <a class="video-link" style="margin-top:10px;" target="_blank" href="https://www.google.com/search?q=${encodeURIComponent('site:nap-camp.com ' + s.name)}">🔗 なっぷで詳細・予約状況を見る</a>
       </div>
     </div>
-  `).join('') : `<p style="font-size:13px;color:#9c9384;">条件に合うキャンプ場が見つかり
+  `).join('') : `<p style="font-size:13px;color:#9c9384;">条件に合うキャンプ場が見つかりませんでした。</p>`;
+}
+function removeMySite(idx){
+  mySites.splice(idx,1);
+  saveMySites(mySites); refreshMasterBadge();
+  renderSites();
+}
+
+/* 追加フォームの開閉と保存 */
+const siteForm = document.getElementById('siteForm');
+document.getElementById('openSiteForm').addEventListener('click',()=>{
+  siteForm.classList.toggle('open');
+});
+document.getElementById('cancelSiteBtn').addEventListener('click',()=>{
+  siteForm.classList.remove('open');
+});
+document.getElementById('saveSiteBtn').addEventListener('click',()=>{
+  const name = document.getElementById('newSiteName').value.trim();
+  const pref = document.getElementById('newSitePref').value;
+  const type = document.getElementById('newSiteType').value;
+  const desc = document.getElementById('newSiteDesc').value.trim();
+  const tagsRaw = document.getElementById('newSiteTags').value.trim();
+  if(!name || !desc){
+    alert('キャンプ場の名前と感想・メモは入力してね');
+    return;
+  }
+  const tags = tagsRaw ? tagsRaw.split(/[,、]/).map(t=>t.trim()).filter(Boolean) : [];
+  mySites.unshift({name, pref, type, emoji:'⛺', desc, tags});
+  saveMySites(mySites); refreshMasterBadge();
+  renderSites();
+  siteForm.classList.remove('open');
+  document.getElementById('newSiteName').value='';
+  document.getElementById('newSiteDesc').value='';
+  document.getElementById('newSiteTags').value='';
+});
+prefSel.addEventListener('change', renderSites);
+document.getElementById('typeFilter').addEventListener('change', renderSites);
+renderSites();
+
+/* ---------------- 隠しギミック:称号バッジ ---------------- */
+function getTotalAdded(){
+  return (customTerms?.length||0) + (mySites?.length||0) + (myCombos?.length||0) + (myMeshi?.length||0);
+}
+function showBadgeToast(message){
+  const toast = document.createElement('div');
+  toast.className = 'badge-toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  requestAnimationFrame(()=> toast.classList.add('show'));
+  setTimeout(()=>{
+    toast.classList.remove('show');
+    setTimeout(()=> toast.remove(), 400);
+  }, 3200);
+}
+function refreshMasterBadge(){
+  const total = getTotalAdded();
+  const badge = document.getElementById('masterBadge');
+  let level = 0, label = '';
+  if(total >= 20){ level = 20; label = '🏆 キャンプマスター'; }
+  else if(total >= 10){ level = 10; label = '🔥 ベテランキャンパー'; }
+  if(badge){
+    if(label){ badge.textContent = label; badge.style.display = 'inline-block'; }
+    else { badge.style.display = 'none'; }
+  }
+  let shownLevel = 0;
+  try{ shownLevel = parseInt(localStorage.getItem('camplab_badge_level')||'0',10); }catch(e){}
+  if(level > shownLevel){
+    try{ localStorage.setItem('camplab_badge_level', String(level)); }catch(e){}
+    showBadgeToast(`🎉 称号「${label.replace(/^\S+\s/,'')}」を獲得しました!`);
+  }
+}
+/* ---------------- キャンプ飯 ---------------- */
+const meshiRecipes = [
+  {name:"焼きマシュマロ", cat:"デザート", emoji:"🍡", meta:"焚き火 / 5分 / 定番人気No.1", desc:"串に刺して焚き火でじっくり炙るだけ。キャンプ飯の人気投票でも1位に選ばれる定番デザート。外はカリッと中はとろとろに。"},
+  {name:"シメの焼きそば", cat:"主食", emoji:"🍜", meta:"鉄板・フライパン / 15分 / BBQのシメ定番", desc:"BBQで余った肉や野菜を活かせるシメの定番メニュー。人気投票でも常に上位に入る鉄板の一皿。"},
+  {name:"スキレットアヒージョ", cat:"おつまみ・おかず", emoji:"🧄", meta:"スキレット / 15分 / お酒のお供に", desc:"オリーブオイルとにんにくでお好みの具材を煮込むだけ。香りが食欲をそそり、人気ランキングでも常連のおつまみ。"},
+  {name:"鮭のホイル焼き", cat:"主食", emoji:"🐟", meta:"アルミホイル・網 / 20分 / 準備ラク", desc:"鮭ときのこ類をホイルで包んで焼くだけ。洗い物が少なく済むので、現地で慌てたくない人に人気。"},
+  {name:"さば缶で簡単アヒージョ", cat:"おつまみ・おかず", emoji:"🥫", meta:"缶詰・網 / 10分 / ソロ向き", desc:"汁気を切ったさば缶にオリーブオイルと乾燥にんにくを加えて温めるだけの超お手軽レシピ。ソロキャンのつまみに最適。"},
+  {name:"スキレットでペッパーライス", cat:"主食", emoji:"🍚", meta:"スキレット / 10分 / ファミリー・グループ", desc:"ご飯と具材をスキレットで一気に焼き上げる時短メニュー。見た目も豪快でグループキャンプで盛り上がる。"},
+  {name:"タンドリーチキンのぎゅうぎゅう焼き", cat:"主食", emoji:"🍗", meta:"スキレット / 30分 / 前日仕込みOK", desc:"前日にタレへ漬け込んでおけば、現地ではスキレットに並べて焼くだけ。ぎゅうぎゅうに詰めた見た目も人気。"},
+  {name:"カマンベールチーズフォンデュ", cat:"おつまみ・おかず", emoji:"🧀", meta:"スキレット(アルミホイル) / 10分", desc:"カマンベールの中心をくり抜いて焼くだけの定番おつまみ。パンや野菜をディップして楽しめる、見た目も映える一品。"},
+  {name:"フライパンひとつでチキンパエリア", cat:"主食", emoji:"🥘", meta:"フライパン / 30分 / ファミリー・グループ", desc:"お米からフライパンひとつで作れるパエリア。洗い物を減らしたいグループキャンプで人気のメニュー。"},
+  {name:"丸ごと1本バターアヒージョ", cat:"おつまみ・おかず", emoji:"🧈", meta:"スキレット / 20分 / 豪快系", desc:"バターをたっぷり使い、肉や野菜を豪快に煮込むアヒージョ。ランキング記事でも紹介される人気の変化球メニュー。"},
+  {name:"ワンパン和風ペペロンチーノ", cat:"主食", emoji:"🍝", meta:"スキレット / 20分 / ソロ向き", desc:"茹でずに具材と一緒にスキレットで仕上げるワンパンパスタ。洗い物が少なく、ソロキャンプでも作りやすい。"},
+  {name:"ホットサンドメーカーで肉巻きおにぎり", cat:"主食", emoji:"🍙", meta:"ホットサンドメーカー / 15分", desc:"おにぎりを肉で巻いてホットサンドメーカーで焼くだけ。形が崩れにくく、子供と一緒に作るのにも向いている。"},
+  {name:"無水シーフードカレー", cat:"主食", emoji:"🍛", meta:"鍋・フライパン / 25分", desc:"トマト缶の水分だけで仕上げる無水カレー。野菜の旨みが凝縮され、人気レシピとしてよく紹介されるメニュー。"},
+  {name:"もみもみホットケーキ", cat:"朝食", emoji:"🥞", meta:"袋・フライパン / 15分 / 子供と一緒に", desc:"ホットケーキミックスと材料を袋の中でもむだけで生地が完成。洗い物が少なく、子供と一緒に作れる朝食の定番。"},
+  {name:"ウインナーパン", cat:"朝食", emoji:"🥖", meta:"フライパン / 15分", desc:"フライパンで簡単に作れるウインナー入りのパン。朝食やおやつにちょうどいいボリューム感で人気。"},
+  {name:"チーズキューブ", cat:"おつまみ・おかず", emoji:"🧀", meta:"揚げ物 / 10分 / SNSでバズった変わり種", desc:"さいころ状に切ったチーズに衣をつけて揚げるだけ。かつてSNSで一気に広まった変わり種レシピで、断面のとろけ具合が映える。"},
+  {name:"冷製コーンスープ蕎麦", cat:"主食", emoji:"🍲", meta:"鍋 / 10分 / SNSで話題の組み合わせ", desc:"コーンクリームスープにめんつゆを加えるという意外な組み合わせがSNSで話題になった一品。暑い時期の軽食にも向く。"},
+  {name:"アイス丸ごとホットサンド", cat:"デザート", emoji:"🍨", meta:"ホットサンドメーカー / 5分 / バズレシピ", desc:"カップアイスをそのままパンに挟んで焼くという驚きのアイデアレシピ。SNSで紹介され話題になったデザート系の変化球。"},
+  {name:"長ねぎとさけるチーズのベーコン巻き串焼", cat:"おつまみ・おかず", emoji:"🍢", meta:"串・網 / 15分 / インスタで人気", desc:"長ねぎとさけるチーズをベーコンで巻いて串に刺して焼くだけ。インスタグラマーが紹介し人気になった、お酒にも合う一品。"},
+  {name:"焼肉ライスバーガー", cat:"主食", emoji:"🍔", meta:"フライパン / 15分 / インスタで話題", desc:"冷凍の焼きおにぎりを半分の厚みに切って、焼肉のタレで焼いた牛肉と大葉をマヨネーズで挟むライスバーガー。SNSで紹介され話題になった。"},
+  {name:"カレーパンの贅沢アレンジ", cat:"朝食", emoji:"🍛", meta:"フライパン・網 / 10分 / インスタで紹介", desc:"市販のカレーパンをひと手間加えて豪華に仕上げるアレンジ。キャンプ飯アカウントが紹介し人気を集めたお手軽メニュー。"},
+  {name:"パイナップルライス", cat:"主食", emoji:"🍍", meta:"パイナップル・フライパン / 20分 / 映え系", desc:"パイナップルの器にチャーハン風のご飯を詰める、見た目のインパクト抜群なメニュー。夏の「おしゃれキャンプ飯」としてよく紹介される。"},
+  {name:"炙りしめ鯖の桜棒寿司", cat:"主食", emoji:"🍣", meta:"ラップ / 20分 / 春の映え系", desc:"しめ鯖をラップで棒状に成形して作る春らしい一品。お花見シーズンの「おしゃれキャンプ飯」として紹介されることが多い。"},
+];
+
+function loadMyMeshi(){
+  try{
+    const raw = localStorage.getItem('camplab_my_meshi');
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+function saveMyMeshi(list){
+  try{ localStorage.setItem('camplab_my_meshi', JSON.stringify(list)); }catch(e){}
+}
+let myMeshi = loadMyMeshi();
+let currentMeshiCat = 'all';
+
+function renderMeshi(){
+  const merged = [
+    ...myMeshi.map((m,i)=>({...m, mine:true, _idx:i})),
+    ...meshiRecipes
+  ];
+  const filtered = currentMeshiCat==='all' ? merged : merged.filter(m=>m.cat===currentMeshiCat);
+  document.getElementById('meshiList').innerHTML = filtered.map(m=>`
+    <div class="gear-card">
+      <div class="gear-img">${m.emoji||'🍳'}</div>
+      <div class="gear-body">
+        ${m.mine ? `<button class="term-remove" onclick="removeMyMeshi(${m._idx})" title="削除">✕</button>` : ''}
+        <h3>${m.name}</h3>
+        <p class="gear-meta">${m.mine ? '自分で追加したレシピ' : (m.meta||'')}</p>
+        <p class="gear-meta">${m.desc}</p>
+        <div class="site-tags" style="margin-bottom:10px;"><span class="site-tag">${m.cat}</span></div>
+        <a class="video-link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent('キャンプ飯 ' + m.name)}">▶ 作り方動画をYouTubeで見る</a>
+      </div>
+    </div>
+  `).join('');
+}
+function removeMyMeshi(idx){
+  myMeshi.splice(idx,1);
+  saveMyMeshi(myMeshi); refreshMasterBadge();
+  renderMeshi();
+}
+renderMeshi();
+
+document.querySelectorAll('#meshiCatSwitch .style-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('#meshiCatSwitch .style-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentMeshiCat = b.dataset.cat;
+    renderMeshi();
+  });
+});
+
+const meshiForm = document.getElementById('meshiForm');
+document.getElementById('openMeshiForm').addEventListener('click',()=>{
+  meshiForm.classList.toggle('open');
+});
+document.getElementById('cancelMeshiBtn').addEventListener('click',()=>{
+  meshiForm.classList.remove('open');
+});
+document.getElementById('saveMeshiBtn').addEventListener('click',()=>{
+  const name = document.getElementById('newMeshiName').value.trim();
+  const cat = document.getElementById('newMeshiCat').value;
+  const desc = document.getElementById('newMeshiDesc').value.trim();
+  if(!name || !desc){
+    alert('メニュー名と作り方の両方を入力してね');
+    return;
+  }
+  myMeshi.unshift({name, cat, desc});
+  saveMyMeshi(myMeshi); refreshMasterBadge();
+  renderMeshi();
+  meshiForm.classList.remove('open');
+  document.getElementById('newMeshiName').value='';
+  document.getElementById('newMeshiDesc').value='';
+});
+
+refreshMasterBadge();
+/* 最後まで実行できたら警告を消す */
+(function(){ var w=document.getElementById('loadWarn'); if(w) w.remove(); })();
+</script>
+</body>
+</html>
