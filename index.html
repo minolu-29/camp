@@ -399,9 +399,11 @@ window.addEventListener('error', function(e){
   .tip-card .tip-img.illus{aspect-ratio:16/10;}
   .media.yt{display:block;aspect-ratio:16/9 !important;height:auto;background:#1c1c1c;}
   .media.yt img{object-fit:cover;}
-  .yt-play{position:absolute;left:50%;top:50%;width:58px;height:40px;margin:-20px 0 0 -29px;border-radius:12px;background:rgba(204,0,0,.9);box-shadow:0 4px 14px rgba(0,0,0,.3);}
-  .yt-play::after{content:"";position:absolute;left:23px;top:12px;border-style:solid;border-width:8px 0 8px 14px;border-color:transparent transparent transparent #fff;}
-  .yt-tag{position:absolute;right:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 9px;border-radius:100px;}
+  .media.yt{cursor:pointer;}
+  .media.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+  .yt-play{position:absolute;left:12px;bottom:12px;width:38px;height:38px;border-radius:50%;background:rgba(255,253,249,.88);box-shadow:0 2px 10px rgba(0,0,0,.25);}
+  .yt-play::after{content:"";position:absolute;left:15px;top:12px;border-style:solid;border-width:7px 0 7px 11px;border-color:transparent transparent transparent var(--forest);}
+  .media.yt.playing .yt-play{display:none;}
   .knot-photo{background:#e9e4d8;}
   .knot-photo img{object-fit:contain;background:#f3efe6;}
   .photo-cap{position:absolute;left:10px;bottom:10px;background:rgba(34,37,31,.78);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:100px;}
@@ -659,7 +661,7 @@ window.addEventListener('error', function(e){
   <div class="footer-inner">
     <p class="footer-logo">CAMP LAB</p>
     <p class="footer-copy">つくって、燃やして、たたむまで。</p>
-    <p class="footer-meta">Photos: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> / Wikimedia Commons (<a href="https://commons.wikimedia.org/wiki/File:Knot_bowline.jpg" target="_blank" rel="noopener">1</a> <a href="https://commons.wikimedia.org/wiki/File:TautlineHitch-ABOK-1800.jpg" target="_blank" rel="noopener">2</a> <a href="https://commons.wikimedia.org/wiki/File:Webeleinenstek.jpg" target="_blank" rel="noopener">3</a> <a href="https://commons.wikimedia.org/wiki/File:Two_half_hitches_3.jpg" target="_blank" rel="noopener">4</a> <a href="https://commons.wikimedia.org/wiki/File:Truckers_hitch.jpg" target="_blank" rel="noopener">5</a> <a href="https://commons.wikimedia.org/wiki/File:Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg" target="_blank" rel="noopener">6</a>)<br>動画サムネイル: YouTube(各動画の投稿者)<br><a href="privacy.html">プライバシーポリシー</a><br>v2026.10.26d</p>
+    <p class="footer-meta">Photos: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> / Wikimedia Commons (<a href="https://commons.wikimedia.org/wiki/File:Knot_bowline.jpg" target="_blank" rel="noopener">1</a> <a href="https://commons.wikimedia.org/wiki/File:TautlineHitch-ABOK-1800.jpg" target="_blank" rel="noopener">2</a> <a href="https://commons.wikimedia.org/wiki/File:Webeleinenstek.jpg" target="_blank" rel="noopener">3</a> <a href="https://commons.wikimedia.org/wiki/File:Two_half_hitches_3.jpg" target="_blank" rel="noopener">4</a> <a href="https://commons.wikimedia.org/wiki/File:Truckers_hitch.jpg" target="_blank" rel="noopener">5</a> <a href="https://commons.wikimedia.org/wiki/File:Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg" target="_blank" rel="noopener">6</a>)<br>動画: YouTube埋め込み(各動画の投稿者)<br><a href="privacy.html">プライバシーポリシー</a><br>v2026.10.26e</p>
   </div>
 </footer>
 
@@ -1212,13 +1214,19 @@ const YT = {batoning:"wuSrsqtYfLs", featherStick:"iQ0cHN6Wm14", logCabin:"ujPKSI
 function ytHref(k,q){ return YT[k] ? 'https://www.youtube.com/watch?v='+YT[k] : 'https://www.youtube.com/results?search_query='+encodeURIComponent(q||''); }
 function yt(k,cls,alt){
   const id=YT[k]; if(!id) return ill(k,cls,alt);
-  return '<a class="media yt '+(cls||'')+'" href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener" aria-label="'+(alt||'')+'の動画を見る">'
+  return '<div class="media yt '+(cls||'')+'" data-yt="'+id+'" role="button" tabindex="0" aria-label="'+(alt||'')+'の動画をここで再生">'
    +'<img src="https://i.ytimg.com/vi/'+id+'/maxresdefault.jpg" alt="'+(alt||'')+'" loading="lazy" decoding="async" '
    +'onload="if(this.naturalWidth<200&&!this.dataset.f){this.dataset.f=1;this.src=\'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg\'}" '
    +'onerror="if(!this.dataset.f){this.dataset.f=1;this.src=\'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg\'}else{this.parentNode.classList.add(\'noimg\')}">'
-   +'<span class="yt-play" aria-hidden="true"></span><span class="yt-tag">YouTube</span></a>';
+   +'<span class="yt-play" aria-hidden="true"></span></div>';
 }
-
+function playInline(el){
+  if(!el || el.classList.contains('playing')) return;
+  el.classList.add('playing');
+  el.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+el.dataset.yt+'?autoplay=1&playsinline=1&rel=0" title="動画" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+}
+document.addEventListener('click',e=>{ const el=e.target.closest('.yt[data-yt]'); if(el) playInline(el); });
+document.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ') && e.target.matches && e.target.matches('.yt[data-yt]')){ e.preventDefault(); playInline(e.target); } });
 function extImg(src,cls,alt){ return '<div class="media '+(cls||'')+'"><img src="'+src+'" alt="'+(alt||'')+'" loading="lazy" decoding="async" onerror="this.parentNode.classList.add(\'noimg\')"></div>'; }
 /* ---------------- タブ切り替え ---------------- */
 document.querySelectorAll('.tab-btn').forEach(btn=>{
