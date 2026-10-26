@@ -390,6 +390,16 @@ window.addEventListener('error', function(e){
   @media (prefers-reduced-motion:reduce){
     *{animation:none !important;transition:none !important;}
   }
+
+  /* ---------- イラスト ---------- */
+  .media.illus{background:#2b211a;}
+  .media.illus svg{display:block;width:100%;height:100%;}
+  .illus-tag{position:absolute;right:10px;top:10px;background:rgba(255,253,249,.88);color:var(--ink-2);font-size:10px;font-weight:700;letter-spacing:.08em;padding:2px 9px;border-radius:100px;}
+  .img-wrap:has(.noimg){display:none;}
+  .tip-card .tip-img.illus{aspect-ratio:16/10;}
+  .knot-photo{background:#e9e4d8;}
+  .knot-photo img{object-fit:contain;background:#f3efe6;}
+  .photo-cap{position:absolute;left:10px;bottom:10px;background:rgba(34,37,31,.78);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:100px;}
 </style>
 </head>
 <body>
@@ -644,7 +654,7 @@ window.addEventListener('error', function(e){
   <div class="footer-inner">
     <p class="footer-logo">CAMP LAB</p>
     <p class="footer-copy">つくって、燃やして、たたむまで。</p>
-    <p class="footer-meta">Photos: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a><br><a href="privacy.html">プライバシーポリシー</a><br>v2026.10.26</p>
+    <p class="footer-meta">Photos: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> / Wikimedia Commons (<a href="https://commons.wikimedia.org/wiki/File:Knot_bowline.jpg" target="_blank" rel="noopener">1</a> <a href="https://commons.wikimedia.org/wiki/File:TautlineHitch-ABOK-1800.jpg" target="_blank" rel="noopener">2</a> <a href="https://commons.wikimedia.org/wiki/File:Webeleinenstek.jpg" target="_blank" rel="noopener">3</a> <a href="https://commons.wikimedia.org/wiki/File:Two_half_hitches_3.jpg" target="_blank" rel="noopener">4</a> <a href="https://commons.wikimedia.org/wiki/File:Truckers_hitch.jpg" target="_blank" rel="noopener">5</a> <a href="https://commons.wikimedia.org/wiki/File:Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg" target="_blank" rel="noopener">6</a>)<br>Illustrations: CAMP LAB<br><a href="privacy.html">プライバシーポリシー</a><br>v2026.10.26b</p>
   </div>
 </footer>
 
@@ -655,6 +665,540 @@ function phUrl(k,w){ return 'https://images.unsplash.com/photo-'+(PH[k]||PH.oran
 function ph(k,cls,alt,w){ return '<div class="media '+(cls||'')+'"><img src="'+phUrl(k,w)+'" alt="'+(alt||'')+'" loading="lazy" decoding="async" onerror="this.parentNode.classList.add(\'noimg\')"></div>'; }
 function pick(pool,seed){ let h=0; const t=String(seed||''); for(let i=0;i<t.length;i++){ h=(h*31+t.charCodeAt(i))>>>0; } return pool[h%pool.length]; }
 
+/* ---------------- 説明どおりのイラスト(SVG) ---------------- */
+const ILL = (()=>{
+  let n=0;
+  const uid=()=> 'i'+(++n);
+  /* 背景: night=夜の焚き火場 / table=木のテーブル / ground=昼の地面 / cloth=チェックのクロス */
+  function scene(kind, body, label){
+    const id=uid();
+    let bg='';
+    if(kind==='night'){
+      bg=`<defs><radialGradient id="${id}g" cx="50%" cy="72%" r="70%"><stop offset="0" stop-color="#7a3d16"/><stop offset=".45" stop-color="#2b211a"/><stop offset="1" stop-color="#14140f"/></radialGradient>
+      <radialGradient id="${id}e" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#3a2a1e"/><stop offset="1" stop-color="#1c1813"/></radialGradient></defs>
+      <rect width="320" height="200" fill="url(#${id}g)"/>
+      <ellipse cx="160" cy="168" rx="150" ry="30" fill="url(#${id}e)"/>
+      <g fill="#fff" opacity=".55"><circle cx="30" cy="22" r="1"/><circle cx="72" cy="40" r=".8"/><circle cx="250" cy="18" r="1.1"/><circle cx="292" cy="46" r=".8"/><circle cx="210" cy="30" r=".7"/></g>`;
+    }else if(kind==='table'){
+      bg=`<defs><linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9c6b3f"/><stop offset="1" stop-color="#6e4526"/></linearGradient></defs>
+      <rect width="320" height="200" fill="url(#${id}g)"/>
+      <g stroke="#5a381e" stroke-width="2" opacity=".55"><path d="M0 50H320M0 100H320M0 150H320"/></g>
+      <g stroke="#b88758" stroke-width="1" opacity=".35" fill="none"><path d="M10 25C80 20 160 30 310 22M20 76C120 70 200 82 300 74M5 125C100 120 220 130 315 124M15 176C110 170 230 180 305 172"/></g>`;
+    }else if(kind==='ground'){
+      bg=`<defs><linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9d6c0"/><stop offset=".55" stop-color="#a9b98f"/><stop offset=".56" stop-color="#8a7356"/><stop offset="1" stop-color="#6b5640"/></linearGradient></defs>
+      <rect width="320" height="200" fill="url(#${id}g)"/>
+      <g fill="#5d7a4a" opacity=".55"><path d="M0 112L20 80L40 112ZM260 112L285 70L310 112ZM230 112L248 88L266 112Z"/></g>
+      <g fill="#5a4632" opacity=".5"><circle cx="40" cy="160" r="3"/><circle cx="280" cy="175" r="2.5"/><circle cx="200" cy="185" r="2"/><circle cx="90" cy="186" r="2"/></g>`;
+    }else{
+      bg=`<rect width="320" height="200" fill="#efe6d4"/>
+      <g fill="#c96a4a" opacity=".18"><rect x="0" y="0" width="320" height="25"/><rect x="0" y="50" width="320" height="25"/><rect x="0" y="100" width="320" height="25"/><rect x="0" y="150" width="320" height="25"/></g>
+      <g fill="#c96a4a" opacity=".18"><rect x="0" y="0" width="25" height="200"/><rect x="50" y="0" width="25" height="200"/><rect x="100" y="0" width="25" height="200"/><rect x="150" y="0" width="25" height="200"/><rect x="200" y="0" width="25" height="200"/><rect x="250" y="0" width="25" height="200"/><rect x="300" y="0" width="25" height="200"/></g>`;
+    }
+    return `<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label||''}" preserveAspectRatio="xMidYMid slice">${bg}${body}</svg>`;
+  }
+  /* 薪(樹皮つき) */
+  function log(x1,y1,x2,y2,w,c){
+    w=w||11; c=c||'#7b5130';
+    const a=Math.atan2(y2-y1,x2-x1), nx=-Math.sin(a)*w*0.18, ny=Math.cos(a)*w*0.18;
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3b2414" stroke-width="${w+3}" stroke-linecap="round"/>
+    <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>
+    <line x1="${x1+nx}" y1="${y1+ny}" x2="${x2+nx}" y2="${y2+ny}" stroke="#a5754a" stroke-width="${w*0.22}" stroke-linecap="round" opacity=".7"/>
+    <circle cx="${x2}" cy="${y2}" r="${w*0.42}" fill="#e2c08d" stroke="#3b2414" stroke-width="1.2"/><circle cx="${x2}" cy="${y2}" r="${w*0.18}" fill="none" stroke="#b8925e" stroke-width=".8"/>`;
+  }
+  /* 炎 */
+  function flame(cx,cy,s){
+    s=s||1; const id=uid();
+    return `<defs><radialGradient id="${id}" cx="50%" cy="60%" r="50%"><stop offset="0" stop-color="#ffcf6b" stop-opacity=".75"/><stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/></radialGradient></defs>
+    <ellipse cx="${cx}" cy="${cy-14*s}" rx="${46*s}" ry="${40*s}" fill="url(#${id})"/>
+    <g transform="translate(${cx} ${cy}) scale(${s})">
+    <path d="M0 0C-22 0-26-22-14-38C-12-28-6-26-6-26C-10-44 0-58 8-66C6-50 16-44 20-34C26-22 22 0 0 0Z" fill="#e85d1c"/>
+    <path d="M0 0C-13 0-15-14-8-24C-6-18-2-17-2-17C-4-30 3-38 8-44C7-33 13-28 14-20C17-10 13 0 0 0Z" fill="#f99a2a"/>
+    <path d="M0 0C-6 0-7-8-3-13C-1-9 1-9 1-9C0-16 4-20 6-23C6-17 9-14 9-9C10-3 6 0 0 0Z" fill="#ffe08a"/></g>`;
+  }
+  const ember=(x,y)=>`<g fill="#ffb347"><circle cx="${x}" cy="${y}" r="1.6"/><circle cx="${x+14}" cy="${y-12}" r="1.1"/><circle cx="${x-10}" cy="${y-20}" r="1.3"/></g>`;
+  const label=(x,y,t,anchor)=>`<g font-family="'Zen Kaku Gothic New',sans-serif" font-size="11" font-weight="700"><text x="${x}" y="${y}" text-anchor="${anchor||'middle'}" fill="#fff" stroke="#1f1a14" stroke-width="3" paint-order="stroke">${t}</text></g>`;
+  const arrow=(d,tx,ty,a,col)=>`<path d="${d}" fill="none" stroke="${col||'#ffe08a'}" stroke-width="2.4" stroke-dasharray="5 4" stroke-linecap="round"/><path d="M-6 -5L6 0L-6 5Z" fill="${col||'#ffe08a'}" transform="translate(${tx} ${ty}) rotate(${a})"/>`;
+  const skillet=(cx,cy,r)=>`<rect x="${cx+r-4}" y="${cy-6}" width="${r*0.9}" height="12" rx="6" fill="#232323" transform="rotate(-8 ${cx} ${cy})"/>
+    <ellipse cx="${cx}" cy="${cy+4}" rx="${r+6}" ry="${r*0.62+6}" fill="#000" opacity=".25"/>
+    <ellipse cx="${cx}" cy="${cy}" rx="${r+4}" ry="${r*0.62+4}" fill="#2a2a2a"/><ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r*0.62}" fill="#3b3b3b"/>`;
+  const steam=(x,y)=>`<g fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".6"><path d="M${x} ${y}c-6-8 6-12 0-20"/><path d="M${x+16} ${y+4}c-6-8 6-12 0-20"/><path d="M${x-16} ${y+4}c-6-8 6-12 0-20"/></g>`;
+  const garlic=(x,y)=>`<g transform="translate(${x} ${y})"><ellipse rx="6" ry="5" fill="#f4ead2" stroke="#c9b48a"/><path d="M0-5V5" stroke="#c9b48a"/></g>`;
+  const shrimp=(x,y,r)=>`<g transform="translate(${x} ${y}) rotate(${r||0})"><path d="M-12 0C-12-10 10-12 12 0C8-4-6-4-6 4Z" fill="#f27d4b" stroke="#c8532a" stroke-width="1.2"/><path d="M-4-7V-1M2-8V-2M7-6V0" stroke="#fbd0b4" stroke-width="1.2"/></g>`;
+  const chili=(x,y,r)=>`<path d="M${x} ${y}c6-2 12 2 16 8c-6-1-12-3-16-8z" fill="#d22d22" transform="rotate(${r||0} ${x} ${y})"/>`;
+  const mush=(x,y)=>`<g transform="translate(${x} ${y})"><path d="M-6 0Q0-9 6 0Z" fill="#a0764b"/><rect x="-1.5" y="0" width="3" height="6" fill="#efe1c4"/></g>`;
+  const broccoli=(x,y)=>`<g transform="translate(${x} ${y})"><rect x="-2" y="0" width="4" height="7" fill="#9bc36b"/><circle cx="-4" cy="-1" r="4" fill="#3f7d34"/><circle cx="3" cy="-2" r="4.5" fill="#4a8a3c"/><circle cx="0" cy="-5" r="4" fill="#3f7d34"/></g>`;
+  const tomato=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r||6}" fill="#e33b2e" stroke="#a8221a"/><path d="M${x-2} ${y-(r||6)}l2 2 2-2" stroke="#3f7d34" stroke-width="1.5" fill="none"/>`;
+
+  const I = {};
+
+  /* ===== 焚き火:技術 ===== */
+  I.batoning = scene('ground', `
+    <ellipse cx="160" cy="170" rx="70" ry="12" fill="#4a3a2a" opacity=".5"/>
+    <rect x="118" y="128" width="84" height="42" rx="6" fill="#8a5e36" stroke="#3b2414" stroke-width="2.5"/>
+    <ellipse cx="160" cy="128" rx="42" ry="10" fill="#e2c08d" stroke="#3b2414" stroke-width="2.5"/>
+    <ellipse cx="160" cy="128" rx="26" ry="6" fill="none" stroke="#b8925e"/><ellipse cx="160" cy="128" rx="12" ry="3" fill="none" stroke="#b8925e"/>
+    <rect x="142" y="56" width="30" height="72" rx="4" fill="#9b6a3f" stroke="#3b2414" stroke-width="2.5"/>
+    <ellipse cx="157" cy="56" rx="15" ry="5" fill="#e2c08d" stroke="#3b2414" stroke-width="2"/>
+    <path d="M157 59V128" stroke="#5a381e" stroke-width="2" stroke-dasharray="3 3"/>
+    <g transform="rotate(-6 157 52)">
+      <path d="M96 48H214L224 52L214 56H96Z" fill="#cfd8dc" stroke="#455a64" stroke-width="2"/>
+      <rect x="62" y="45" width="40" height="14" rx="5" fill="#5d4037" stroke="#2b1d15" stroke-width="2"/>
+      <rect x="214" y="48" width="4" height="8" fill="#455a64"/>
+    </g>
+    <g transform="rotate(-25 230 40)">
+      <rect x="208" y="20" width="18" height="70" rx="8" fill="#8a5e36" stroke="#3b2414" stroke-width="2.5"/>
+      <ellipse cx="217" cy="20" rx="9" ry="3.5" fill="#e2c08d" stroke="#3b2414" stroke-width="1.5"/>
+    </g>
+    ${arrow('M250 18C246 30 238 36 226 42',224,43,140,'#2b4a2a')}
+    ${label(70,30,'ナイフを薪に当てる','start')}
+    ${label(262,104,'バトンで背を叩く')}
+    ${label(160,192,'刃が下へ進み、薪が縦に割れる')}
+  `,'バトニング:ナイフの背をバトンで叩いて薪を割る');
+
+  I.featherStick = scene('ground', (()=>{
+    let curls='';
+    for(let i=0;i<9;i++){
+      const y=74+i*9, w=20+i*2.2;
+      curls+=`<path d="M152 ${y}C${152-w} ${y+4} ${152-w-6} ${y+16} ${152-w+6} ${y+18}C${152-w+12} ${y+19} ${152-w+10} ${y+10} 150 ${y+6}Z" fill="#f6e7c8" stroke="#a5754a" stroke-width="1.2"/>`;
+      curls+=`<path d="M168 ${y+3}C${168+w} ${y+7} ${168+w+6} ${y+19} ${168+w-6} ${y+21}C${168+w-12} ${y+22} ${168+w-10} ${y+13} 170 ${y+9}Z" fill="#f2dfba" stroke="#a5754a" stroke-width="1.2"/>`;
+    }
+    return `<ellipse cx="160" cy="180" rx="60" ry="9" fill="#4a3a2a" opacity=".45"/>
+    <rect x="148" y="30" width="24" height="150" rx="6" fill="#c89a62" stroke="#3b2414" stroke-width="2.5"/>
+    <rect x="148" y="30" width="24" height="44" rx="6" fill="#7b5130" stroke="#3b2414" stroke-width="2.5"/>
+    ${curls}
+    <g transform="rotate(28 214 66)">
+      <path d="M176 60H232L240 64L232 68H176Z" fill="#cfd8dc" stroke="#455a64" stroke-width="2"/>
+      <rect x="232" y="58" width="44" height="13" rx="5" fill="#5d4037" stroke="#2b1d15" stroke-width="2"/>
+    </g>
+    ${arrow('M250 112C238 132 222 142 206 148',204,149,155,'#2b4a2a')}
+    ${label(70,40,'羽根のようなカール','start')}
+    ${label(260,170,'上から下へ薄く削る')}`;
+  })(),'フェザースティック:木を薄く削って羽根状のカールを作る');
+
+  /* ===== 焚き火:組み方 ===== */
+  I.logCabin = scene('night', (()=>{
+    let back='', front='';
+    for(let k=0;k<4;k++){
+      const y=160-k*17, w=11-k*0.6;
+      if(k%2===0){
+        back += log(104+k*6,y-14,212-k*6,y-14,w,'#6b4423');
+        front+= log(98+k*6,y+2,206-k*6,y+2,w);
+      }else{
+        back += log(110+k*6,y+4,132+k*6,y-20,w,'#7b5130') + log(196-k*6,y+4,218-k*6,y-20,w,'#7b5130');
+      }
+    }
+    return `${back}${flame(158,148,1)}${front}
+    <g stroke="#e8cf9e" stroke-width="2.4" stroke-linecap="round"><path d="M148 150L160 136M166 152L172 136"/></g>
+    ${ember(150,58)}
+    ${label(160,34,'「井」の字に交互に積み上げる')}
+    ${label(160,190,'中は空洞=空気の通り道')}`;
+  })(),'井桁型:薪を井の字に交互に積む');
+
+  I.teepee = scene('night', `
+    ${flame(160,150,1.1)}
+    ${log(112,168,160,58,10)}${log(132,170,162,58,10,'#6b4423')}${log(188,170,158,58,10)}${log(208,168,160,58,10,'#6b4423')}
+    ${log(122,172,160,62,8,'#8a5e36')}${log(198,172,160,62,8,'#8a5e36')}
+    <g stroke="#e8cf9e" stroke-width="2.4" stroke-linecap="round"><path d="M150 166L160 150M170 166L160 150M156 168L164 150"/></g>
+    ${ember(176,40)}
+    ${label(60,40,'円錐状に立てかける','start')}
+    ${label(262,120,'中心に焚き付け')}
+    ${arrow('M248 128C232 140 200 150 178 156',176,157,160)}
+  `,'ティピー型:薪を円錐状に立てかける');
+
+  I.starFire = scene('night', `
+    <g transform="translate(0 6)">
+    ${log(160,140,62,118,12)}${log(160,140,258,118,12,'#6b4423')}${log(160,140,70,170,12,'#6b4423')}${log(160,140,250,172,12)}${log(160,140,160,186,12)}
+    ${flame(160,140,0.85)}
+    ${arrow('M60 96C80 100 100 108 116 118',118,119,30)}
+    ${arrow('M262 96C242 100 222 108 206 118',204,119,150)}
+    </g>
+    ${label(160,36,'中心から放射状に並べる')}
+    ${label(160,58,'燃えた分だけ中央へ押し込む')}
+  `,'開き傘型:薪を放射状に並べ中央へ押し込む');
+
+  I.leanTo = scene('night', `
+    ${log(70,160,262,160,18,'#6b4423')}
+    ${flame(150,150,0.95)}
+    ${log(118,174,176,104,8)}${log(138,176,200,106,8,'#8a5e36')}${log(158,176,222,110,8)}${log(178,176,240,116,8,'#8a5e36')}
+    <g fill="#b9c6d0" opacity=".85"><path d="M28 80H64M20 96H66M30 112H62" stroke="#b9c6d0" stroke-width="3" stroke-linecap="round"/></g>
+    ${arrow('M30 128C52 136 82 146 108 152',110,153,15,'#b9c6d0')}
+    ${label(46,70,'風','middle')}
+    ${label(200,190,'太い薪を風よけの土台に')}
+    ${label(230,80,'細い薪を斜めに立てかける')}
+  `,'差し掛け型:太い薪を土台に細い薪を立てかける');
+
+  /* ===== 焚き火:着火アイテム ===== */
+  I.solidStarter = scene('night', `
+    ${log(70,160,250,160,14,'#4a3020')}
+    <g transform="translate(160 132)">
+      <rect x="-40" y="0" width="80" height="22" rx="2" fill="#f2f0ea" stroke="#9a968a" stroke-width="1.5"/>
+      <path d="M-20 0V22M0 0V22M20 0V22M-40 11H40" stroke="#c9c5b8" stroke-width="1.2"/>
+      <rect x="54" y="6" width="22" height="14" rx="2" fill="#f2f0ea" stroke="#9a968a" stroke-width="1.5"/>
+    </g>
+    ${flame(140,132,0.6)}
+    <g transform="rotate(-30 214 92)"><rect x="200" y="88" width="46" height="4" rx="2" fill="#e8c890"/><circle cx="200" cy="90" r="4.5" fill="#c0392b"/></g>
+    ${label(160,40,'ブロックを1つ割って薪の下に置く')}
+    ${label(160,190,'マッチ1本で着火')}
+  `,'固形着火剤');
+
+  I.gelStarter = scene('night', `
+    ${log(80,150,240,150,16)}${log(96,128,226,128,14,'#6b4423')}
+    <path d="M118 120C126 124 140 122 150 126C160 130 176 126 190 130" fill="none" stroke="#bfe3ff" stroke-width="5" stroke-linecap="round" opacity=".85"/>
+    <g transform="rotate(35 248 70)">
+      <rect x="226" y="40" width="44" height="72" rx="10" fill="#2f7fc1" stroke="#1d4f7a" stroke-width="2"/>
+      <rect x="236" y="26" width="24" height="16" rx="3" fill="#e9eef2" stroke="#7a8a96" stroke-width="1.5"/>
+      <rect x="244" y="14" width="8" height="14" rx="2" fill="#e9eef2" stroke="#7a8a96" stroke-width="1.5"/>
+      <rect x="232" y="60" width="32" height="20" rx="3" fill="#fff" opacity=".9"/>
+    </g>
+    <path d="M214 92C206 104 196 114 190 124" stroke="#bfe3ff" stroke-width="4" stroke-linecap="round" fill="none"/>
+    ${label(90,44,'薪や炭に直接塗る','start')}
+    ${label(160,186,'※火がついた後の継ぎ足しは厳禁')}
+  `,'ジェルタイプ着火剤');
+
+  I.juteTwine = scene('ground', `
+    <ellipse cx="160" cy="176" rx="110" ry="12" fill="#4a3a2a" opacity=".4"/>
+    <g transform="translate(92 120)">
+      <ellipse cx="0" cy="34" rx="40" ry="12" fill="#a9844f" stroke="#6b4f2a" stroke-width="2"/>
+      <rect x="-40" y="-20" width="80" height="54" fill="#c49b5f"/>
+      <ellipse cx="0" cy="-20" rx="40" ry="12" fill="#d6b07a" stroke="#6b4f2a" stroke-width="2"/>
+      <ellipse cx="0" cy="-20" rx="12" ry="4" fill="#5a4026"/>
+      <g stroke="#a07a45" stroke-width="1.5"><path d="M-40 -8H40M-40 4H40M-40 16H40M-40 28H40"/></g>
+    </g>
+    <path d="M132 112C160 108 176 130 196 128" stroke="#c49b5f" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <g fill="none" stroke="#e3c48f" stroke-width="1.6" stroke-linecap="round">
+      ${Array.from({length:26},(_,i)=>{const a=i/26*Math.PI*2, r=24+((i*7)%10); return `<path d="M228 132q${Math.cos(a)*r*0.5} ${Math.sin(a)*r*0.5-6} ${Math.cos(a)*r} ${Math.sin(a)*r*0.7}"/>`;}).join('')}
+    </g>
+    ${label(230,82,'ほぐしてフワフワに')}
+    ${label(92,190,'麻紐')}
+    ${label(232,190,'= 火口(ほくち)')}
+  `,'麻紐をほぐして火口にする');
+
+  I.ferroRod = scene('night', `
+    ${log(70,170,250,170,12,'#4a3020')}
+    <g fill="none" stroke="#e8cf9e" stroke-width="1.4" stroke-linecap="round" opacity=".9">
+      ${Array.from({length:18},(_,i)=>{const a=i/18*Math.PI*2; return `<path d="M160 156q${Math.cos(a)*9} ${Math.sin(a)*5-4} ${Math.cos(a)*18} ${Math.sin(a)*8}"/>`;}).join('')}
+    </g>
+    <g transform="rotate(-38 150 100)">
+      <rect x="66" y="92" width="40" height="18" rx="7" fill="#7b5130" stroke="#3b2414" stroke-width="2"/>
+      <rect x="104" y="96" width="92" height="10" rx="5" fill="#5b6b74" stroke="#2b353b" stroke-width="2"/>
+    </g>
+    <g transform="rotate(20 196 70)"><rect x="176" y="62" width="44" height="12" rx="3" fill="#cfd8dc" stroke="#455a64" stroke-width="2"/></g>
+    <g stroke="#ffd166" stroke-width="2.4" stroke-linecap="round">
+      <path d="M176 106L168 130"/><path d="M180 108L182 136"/><path d="M172 104L156 124"/><path d="M184 106L192 128"/><path d="M178 112L172 146"/>
+    </g>
+    <g fill="#fff3b0"><circle cx="168" cy="132" r="2"/><circle cx="182" cy="138" r="2"/><circle cx="156" cy="126" r="1.6"/><circle cx="172" cy="148" r="2"/></g>
+    ${label(70,40,'ロッドをストライカーで強く擦る','start')}
+    ${label(160,192,'火花を火口(麻紐など)に落とす')}
+  `,'ファイヤースターター');
+
+  /* ===== スタッキング ===== */
+  I.containerStack = scene('ground', (()=>{
+    const box=(x,y,col,lid,lbl,items)=>`<g transform="translate(${x} ${y})">
+      <path d="M0 6L6 40H94L100 6Z" fill="${col}" stroke="#2b2b2b" stroke-width="1.8"/>
+      <rect x="-3" y="0" width="106" height="9" rx="2" fill="${lid}" stroke="#2b2b2b" stroke-width="1.8"/>
+      <rect x="40" y="2" width="20" height="4" rx="2" fill="#2b2b2b" opacity=".35"/>
+      <rect x="22" y="16" width="56" height="14" rx="2" fill="#fffdf5" stroke="#2b2b2b" stroke-width="1"/>
+      <text x="50" y="27" text-anchor="middle" font-size="9" font-weight="700" font-family="'Zen Kaku Gothic New',sans-serif" fill="#2b2b2b">${lbl}</text>${items||''}</g>`;
+    return `<ellipse cx="96" cy="182" rx="70" ry="8" fill="#3d3022" opacity=".45"/>
+      ${box(46,136,'#5f6f52','#4a5940','調理小物')}
+      ${box(46,92,'#7a8c6a','#5f6f52','食器')}
+      ${box(46,48,'#5f6f52','#4a5940','カトラリー')}
+      <g transform="translate(188 92)">
+        <path d="M0 10L8 72H116L124 10Z" fill="#7a8c6a" stroke="#2b2b2b" stroke-width="1.8"/>
+        <rect x="-4" y="40" width="132" height="0" stroke="none"/>
+        <g>
+          <rect x="16" y="-14" width="30" height="30" rx="4" fill="#c7cdd1" stroke="#455a64" stroke-width="1.6"/>
+          <rect x="12" y="-18" width="38" height="6" rx="2" fill="#9aa5ab" stroke="#455a64" stroke-width="1.4"/>
+          <ellipse cx="76" cy="0" rx="18" ry="6" fill="#fff" stroke="#9a968a" stroke-width="1.4"/>
+          <ellipse cx="76" cy="-5" rx="18" ry="6" fill="#fff" stroke="#9a968a" stroke-width="1.4"/>
+          <path d="M100 -20V8M106 -22V8" stroke="#90a4ae" stroke-width="3" stroke-linecap="round"/>
+          <path d="M98 -22c0 6 4 8 4 0M104-24c0 6 4 8 4 0" stroke="#90a4ae" stroke-width="2" fill="none"/>
+        </g>
+        <rect x="-4" y="6" width="132" height="8" rx="2" fill="#5f6f52" stroke="#2b2b2b" stroke-width="1.8"/>
+        <text x="62" y="50" text-anchor="middle" font-size="10" font-weight="700" font-family="'Zen Kaku Gothic New',sans-serif" fill="#fffdf5">中身を分けて収納</text>
+      </g>
+      ${label(96,34,'同じサイズを積み重ねる')}
+      ${label(250,190,'そのまま車載OK')}`;
+  })(),'同じサイズのコンテナボックスを積み重ねて収納');
+
+  I.cookerStack = scene('table', `
+    <ellipse cx="96" cy="168" rx="56" ry="10" fill="#000" opacity=".2"/>
+    <g transform="translate(96 108)">
+      <rect x="-46" y="0" width="92" height="56" rx="8" fill="#b0bec5" stroke="#455a64" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="46" ry="12" fill="#cfd8dc" stroke="#455a64" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="36" ry="8" fill="#37474f"/>
+      <rect x="-24" y="-30" width="48" height="34" rx="6" fill="#263238" stroke="#11181c" stroke-width="2"/>
+      <rect x="-18" y="-24" width="36" height="12" rx="2" fill="#e65100"/>
+      <rect x="-8" y="-40" width="16" height="12" rx="3" fill="#90a4ae" stroke="#455a64" stroke-width="1.5"/>
+      <rect x="46" y="16" width="40" height="7" rx="3" fill="#455a64"/>
+    </g>
+    <g transform="translate(232 104)">
+      <ellipse cx="0" cy="66" rx="44" ry="8" fill="#000" opacity=".2"/>
+      <rect x="-30" y="0" width="60" height="58" rx="10" fill="#263238" stroke="#11181c" stroke-width="2"/>
+      <rect x="-24" y="12" width="48" height="18" rx="2" fill="#e65100"/>
+      <rect x="-8" y="-12" width="16" height="14" rx="3" fill="#90a4ae" stroke="#455a64" stroke-width="1.5"/>
+      <g transform="translate(0 -26)"><path d="M-20 0H20L14 10H-14Z" fill="#9e9e9e" stroke="#424242" stroke-width="1.5"/><path d="M-20 0L-28-8M20 0L28-8M0 0V-10" stroke="#757575" stroke-width="3" stroke-linecap="round"/></g>
+    </g>
+    ${arrow('M196 120C176 112 160 104 146 100',144,100,200,'#fff7e0')}
+    ${label(96,38,'クッカーの中に')}
+    ${label(96,56,'ガス缶+バーナーを収納')}
+    ${label(232,186,'ガス缶とバーナー')}
+  `,'ソロクッカーの中にガス缶とバーナーを収める');
+
+  /* ===== キャンプ飯 ===== */
+  I.yakisoba = scene('cloth', (()=>{
+    let nd='';
+    for(let i=0;i<34;i++){const x=100+((i*37)%120), y=88+((i*23)%48); nd+=`<path d="M${x} ${y}c8-6 14 6 22 0s12-4 18 2" stroke="${i%3?'#c98a3c':'#a96a2a'}" stroke-width="3.2" fill="none" stroke-linecap="round"/>`;}
+    return `<rect x="56" y="62" width="208" height="104" rx="6" fill="#2d2d2d" stroke="#151515" stroke-width="3"/>
+      <rect x="64" y="70" width="192" height="88" rx="4" fill="#3d3d3d"/>
+      ${nd}
+      <g fill="#7fb04a"><path d="M118 104l14-6 6 10-14 4z"/><path d="M196 120l12-8 8 9-14 6z"/></g>
+      <g fill="#f4a29a"><rect x="150" y="96" width="18" height="8" rx="3"/><rect x="128" y="126" width="16" height="7" rx="3"/><rect x="186" y="98" width="16" height="7" rx="3"/></g>
+      <g fill="#ffb37c"><rect x="168" y="130" width="14" height="4" rx="2"/><rect x="108" y="118" width="12" height="4" rx="2"/></g>
+      <g fill="#e2463b"><rect x="210" y="104" width="8" height="3" rx="1"/><rect x="214" y="110" width="8" height="3" rx="1"/></g>
+      <g fill="#2f6b2f"><circle cx="160" cy="114" r="1.5"/><circle cx="176" cy="110" r="1.5"/><circle cx="140" cy="112" r="1.5"/><circle cx="192" cy="128" r="1.5"/></g>
+      <path d="M232 78l40-36" stroke="#c0c0c0" stroke-width="6" stroke-linecap="round"/><rect x="226" y="72" width="22" height="16" rx="2" fill="#d6d6d6" transform="rotate(-42 237 80)"/>
+      ${steam(150,60)}`;
+  })(),'鉄板で作るシメの焼きそば');
+
+  I.salmonFoil = scene('table', `
+    <ellipse cx="160" cy="150" rx="118" ry="30" fill="#000" opacity=".2"/>
+    <path d="M44 120C60 84 100 70 160 70C220 70 262 86 276 120C262 154 220 164 160 164C100 164 58 156 44 120Z" fill="#d7dde2" stroke="#8b979f" stroke-width="2"/>
+    <path d="M58 118C76 92 112 84 160 84C208 84 244 94 262 118C244 144 208 150 160 150C112 150 76 144 58 118Z" fill="#bfc7cd"/>
+    <path d="M102 114C110 96 150 92 196 98C222 102 228 124 206 134C170 146 120 142 106 130Z" fill="#f58b62" stroke="#c8532a" stroke-width="1.6"/>
+    <g stroke="#ffd2bd" stroke-width="2.2" fill="none" opacity=".9"><path d="M124 104c6 10 4 22-2 30"/><path d="M146 100c6 12 4 26-2 36"/><path d="M168 100c6 12 4 26-2 36"/><path d="M190 102c5 10 3 22-2 30"/></g>
+    ${mush(116,134)}${mush(206,108)}${mush(218,130)}${mush(96,118)}
+    <g fill="#f4e8c8" stroke="#c9b48a"><rect x="128" y="128" width="3" height="16" rx="1.5"/><rect x="134" y="130" width="3" height="16" rx="1.5"/><rect x="140" y="128" width="3" height="16" rx="1.5"/></g>
+    <rect x="150" y="104" width="22" height="12" rx="2" fill="#fff4c2" stroke="#d9c26a"/>
+    <circle cx="232" cy="120" r="10" fill="#f9e04b" stroke="#c9a92a"/><circle cx="232" cy="120" r="6" fill="none" stroke="#fff6b0"/>
+    ${steam(160,70)}
+  `,'鮭ときのこのホイル焼き');
+
+  I._unused_ajillo = scene('table', `
+    ${skillet(150,110,80)}
+    <ellipse cx="150" cy="110" rx="74" ry="45" fill="#d7a73a"/>
+    <ellipse cx="150" cy="110" rx="74" ry="45" fill="#f6c94a" opacity=".55"/>
+    ${shrimp(120,100,-10)}${shrimp(176,94,20)}${shrimp(150,124,0)}${shrimp(190,118,-30)}${shrimp(108,124,30)}
+    ${garlic(140,96)}${garlic(166,114)}${garlic(126,116)}${garlic(196,104)}
+    ${broccoli(160,100)}${mush(134,132)}${mush(178,132)}
+    ${chili(98,106,10)}${chili(200,90,-20)}
+    <g transform="translate(262 150) rotate(-18)"><rect x="-26" y="-14" width="52" height="28" rx="12" fill="#d9a35b" stroke="#8a5e2a" stroke-width="2"/><path d="M-14-8l6 16M0-10l6 18M14-8l4 14" stroke="#b8803e" stroke-width="2"/></g>
+    <circle cx="150" cy="110" r="3" fill="#fff" opacity=".7"/>
+  `,'スキレットで作るアヒージョ');
+
+  I.sabaCan = scene('table', `
+    <ellipse cx="150" cy="142" rx="86" ry="22" fill="#000" opacity=".22"/>
+    <rect x="70" y="96" width="160" height="40" rx="10" fill="#b0b7bd" stroke="#5f686e" stroke-width="2"/>
+    <ellipse cx="150" cy="96" rx="80" ry="26" fill="#cfd5da" stroke="#5f686e" stroke-width="2"/>
+    <ellipse cx="150" cy="96" rx="70" ry="20" fill="#d9a83c"/>
+    <ellipse cx="150" cy="96" rx="70" ry="20" fill="#f6cf58" opacity=".5"/>
+    <g><path d="M104 92C112 82 138 82 146 92C138 102 112 102 104 92Z" fill="#c9b8a4" stroke="#7b6a58" stroke-width="1.4"/><path d="M106 88C116 84 132 84 142 88" stroke="#3f4a5a" stroke-width="3" fill="none"/>
+    <path d="M152 98C160 88 186 88 194 98C186 108 160 108 152 98Z" fill="#c9b8a4" stroke="#7b6a58" stroke-width="1.4"/><path d="M154 94C164 90 180 90 190 94" stroke="#3f4a5a" stroke-width="3" fill="none"/></g>
+    ${garlic(128,104)}${garlic(176,86)}${chili(196,100,-10)}
+    <path d="M70 110H230" stroke="#8f989e" stroke-width="2"/>
+    <g transform="translate(150 166)"><rect x="-90" y="-6" width="180" height="12" rx="2" fill="#555" opacity=".9"/><path d="M-80 -6V6M-60 -6V6M-40 -6V6M-20 -6V6M0 -6V6M20 -6V6M40 -6V6M60 -6V6M80 -6V6" stroke="#888"/></g>
+    ${steam(150,58)}
+    ${label(260,60,'さば缶ごと網へ')}
+  `,'さば缶で作る簡単アヒージョ');
+
+  I.pepperRice = scene('table', `
+    ${skillet(150,110,80)}
+    <ellipse cx="150" cy="110" rx="74" ry="45" fill="#f3ead7"/>
+    <g fill="#fffaf0" opacity=".9">${Array.from({length:60},(_,i)=>`<ellipse cx="${88+(i*29)%124}" cy="${76+(i*17)%68}" rx="2.6" ry="1.4"/>`).join('')}</g>
+    <g fill="#9c4a3a">${Array.from({length:12},(_,i)=>`<path d="M${100+(i*41)%100} ${84+(i*19)%50}q10-6 22 0q-10 7-22 0z"/>`).join('')}</g>
+    <ellipse cx="150" cy="108" rx="18" ry="12" fill="#f6d23c" opacity=".95"/>
+    <g fill="#ffd84a">${Array.from({length:14},(_,i)=>`<circle cx="${140+(i*7)%26}" cy="${100+(i*5)%16}" r="2.6"/>`).join('')}</g>
+    <rect x="186" y="92" width="16" height="12" rx="2" fill="#fff3b0" stroke="#d9c26a"/>
+    <g fill="#2b2b2b">${Array.from({length:30},(_,i)=>`<circle cx="${96+(i*31)%116}" cy="${80+(i*13)%60}" r="1"/>`).join('')}</g>
+    <g fill="#3f7d34"><circle cx="122" cy="122" r="2"/><circle cx="176" cy="128" r="2"/><circle cx="130" cy="94" r="2"/></g>
+    ${steam(150,52)}
+  `,'スキレットで作るペッパーライス');
+
+  I.tandoori = scene('table', `
+    ${skillet(150,110,82)}
+    <ellipse cx="150" cy="110" rx="76" ry="46" fill="#7a3d22"/>
+    ${[[112,94],[150,88],[188,96],[124,124],[170,126],[204,118]].map(([x,y],i)=>`<g transform="translate(${x} ${y}) rotate(${i*30-40})"><path d="M-18 0C-18-12 18-14 20 0C18 12-16 12-18 0Z" fill="#c9431f" stroke="#7a2410" stroke-width="1.5"/><path d="M-10-4c6-3 14-3 20 0" stroke="#e8723d" stroke-width="2" fill="none"/><path d="M-6 4l3-3M4 5l3-3" stroke="#5a1a0a" stroke-width="1.6"/></g>`).join('')}
+    ${broccoli(136,108)}${broccoli(190,110)}
+    <g fill="#f2a43a"><path d="M96 110l10-6 6 8-10 4z"/><path d="M160 136l10-6 6 8-10 4z"/></g>
+    <g fill="#e9e3ff" stroke="#9b8ac9"><path d="M174 82c6-6 14-2 12 4-4 2-8 0-12-4z"/><path d="M108 132c6-6 14-2 12 4-4 2-8 0-12-4z"/></g>
+    <g fill="#f5d27a" stroke="#c99a2e"><ellipse cx="150" cy="112" rx="8" ry="5"/><ellipse cx="208" cy="132" rx="7" ry="4.5"/></g>
+    ${steam(150,52)}
+    ${label(150,186,'ぎゅうぎゅうに詰めて焼く')}
+  `,'タンドリーチキンのぎゅうぎゅう焼き');
+
+  I.camembert = scene('table', `
+    ${skillet(150,112,76)}
+    <circle cx="150" cy="110" r="44" fill="#f7efdc" stroke="#d9c8a2" stroke-width="3" transform="scale(1 .66) translate(0 57)"/>
+    <ellipse cx="150" cy="110" rx="44" ry="29" fill="#f7efdc" stroke="#dccaa4" stroke-width="3"/>
+    <ellipse cx="150" cy="106" rx="30" ry="19" fill="#ffe7a0"/>
+    <path d="M128 112C132 128 142 130 146 120C150 132 164 132 166 116C170 126 176 124 174 112" fill="#ffe7a0"/>
+    <g fill="#fff9e0"><ellipse cx="142" cy="100" rx="6" ry="3"/><ellipse cx="160" cy="108" rx="4" ry="2"/></g>
+    <g transform="translate(232 118) rotate(-30)"><rect x="-12" y="-8" width="40" height="18" rx="5" fill="#d9a35b" stroke="#8a5e2a" stroke-width="2"/><rect x="-12" y="-8" width="40" height="5" rx="2" fill="#b8803e"/></g>
+    <path d="M186 100L240 70" stroke="#c9c9c9" stroke-width="3" stroke-linecap="round"/>
+    <g transform="translate(76 160) rotate(20)"><rect x="-14" y="-7" width="30" height="14" rx="4" fill="#d9a35b" stroke="#8a5e2a" stroke-width="2"/></g>
+    <g fill="#e33b2e"><circle cx="94" cy="62" r="7"/><circle cx="106" cy="56" r="6"/></g>
+    <g fill="#3f7d34"><circle cx="220" cy="164" r="6"/><circle cx="230" cy="158" r="5"/><circle cx="226" cy="170" r="5"/></g>
+    ${label(150,30,'とろけたカマンベールにディップ')}
+  `,'カマンベールチーズフォンデュ');
+
+  I.butterAjillo = scene('table', `
+    ${skillet(150,110,80)}
+    <ellipse cx="150" cy="110" rx="74" ry="45" fill="#e3b448"/>
+    <ellipse cx="150" cy="110" rx="74" ry="45" fill="#ffe08a" opacity=".45"/>
+    <g transform="translate(150 98)"><path d="M-30-14L18-20L34-6L-14 2Z" fill="#fff1a6" stroke="#d8b54a" stroke-width="1.8"/><path d="M-14 2L34-6V8L-14 16Z" fill="#f6dc72" stroke="#d8b54a" stroke-width="1.8"/><path d="M-30-14L-14 2V16L-30 0Z" fill="#ead068" stroke="#d8b54a" stroke-width="1.8"/></g>
+    <g fill="#e9a07e" stroke="#a85a3c" stroke-width="1.4"><path d="M100 120c6-10 22-10 26 0-6 8-20 8-26 0z"/><path d="M176 126c6-10 22-10 26 0-6 8-20 8-26 0z"/></g>
+    <g fill="#d95a43" stroke="#8e2c1f" stroke-width="1.2"><rect x="194" y="96" width="24" height="10" rx="5"/><rect x="104" y="96" width="24" height="10" rx="5"/></g>
+    ${mush(134,130)}${mush(162,134)}${broccoli(208,118)}${broccoli(96,108)}${garlic(126,108)}${garlic(184,110)}
+    ${label(150,32,'バターをまるごと1本')}
+  `,'丸ごと1本バターアヒージョ');
+
+  I.peperoncino = scene('table', `
+    ${skillet(150,110,80)}
+    <ellipse cx="150" cy="110" rx="74" ry="45" fill="#5a4a32"/>
+    ${Array.from({length:30},(_,i)=>{const a=i/30*Math.PI*2, r=10+(i%5)*11; return `<path d="M${150+Math.cos(a)*r} ${110+Math.sin(a)*r*0.6}c${10*Math.cos(a+1.4)} ${8*Math.sin(a+1.4)} ${20*Math.cos(a+.5)} ${6*Math.sin(a+.5)} ${26*Math.cos(a)} ${12*Math.sin(a)}" stroke="${i%2?'#f2d58a':'#e8c46e'}" stroke-width="3" fill="none" stroke-linecap="round"/>`;}).join('')}
+    ${garlic(130,100)}${garlic(170,118)}${garlic(150,90)}
+    ${chili(112,116,0)}${chili(180,96,40)}${chili(156,126,-30)}
+    <g fill="#3f8a3a"><path d="M120 86c8-8 20-4 18 6-8 2-14 0-18-6z"/><path d="M182 128c8-8 20-4 18 6-8 2-14 0-18-6z"/></g>
+    <g fill="#e8e1ff" stroke="#8a7fc0" stroke-width="1"><ellipse cx="200" cy="108" rx="7" ry="4"/><ellipse cx="102" cy="104" rx="6" ry="3.5"/></g>
+    ${label(150,32,'茹でずにワンパンで仕上げ')}
+  `,'ワンパン和風ペペロンチーノ');
+
+  I.nikumaki = scene('table', `
+    <g transform="translate(150 110)">
+      <rect x="40" y="-6" width="110" height="14" rx="7" fill="#2b2b2b"/>
+      <rect x="-86" y="-58" width="132" height="116" rx="18" fill="#2f2f2f" stroke="#141414" stroke-width="3"/>
+      <rect x="-76" y="-48" width="112" height="96" rx="12" fill="#3d3d3d"/>
+      <g transform="translate(-20 0)">
+        <path d="M-34 30L0-34L34 30Z" fill="#8a4a2a" stroke="#5a2a14" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M-26 22L0-24L26 22Z" fill="#a85a32"/>
+        <g stroke="#e9b48a" stroke-width="3" fill="none" opacity=".8"><path d="M-22 10H22M-14-6H14M-6-18H6"/></g>
+        <g stroke="#3a1a0a" stroke-width="3" opacity=".8"><path d="M-30 18L22-10M-20 26L30 0"/></g>
+        <rect x="-10" y="18" width="20" height="10" fill="#fdfbf3"/>
+      </g>
+    </g>
+    ${steam(130,40)}
+    ${label(150,186,'おにぎりを豚肉で巻いてホットサンドメーカーで焼く')}
+  `,'ホットサンドメーカーで焼く肉巻きおにぎり');
+
+  I.curry = scene('ground', `
+    <ellipse cx="150" cy="168" rx="90" ry="12" fill="#3d3022" opacity=".45"/>
+    <path d="M70 96H230V146C230 160 210 168 150 168C90 168 70 160 70 146Z" fill="#3a3a3a" stroke="#1b1b1b" stroke-width="2.5"/>
+    <ellipse cx="150" cy="96" rx="80" ry="22" fill="#2a2a2a" stroke="#1b1b1b" stroke-width="2.5"/>
+    <ellipse cx="150" cy="98" rx="72" ry="17" fill="#b9741f"/>
+    <ellipse cx="150" cy="98" rx="72" ry="17" fill="#d68f2a" opacity=".5"/>
+    ${shrimp(118,96,0)}${shrimp(176,100,15)}
+    <g fill="#f1e6d6" stroke="#b9a68c"><circle cx="146" cy="92" r="6"/><circle cx="196" cy="94" r="5"/></g>
+    <g fill="#2a2a2a"><path d="M128 104c6-5 14-5 18 0-6 4-12 4-18 0z"/></g>
+    <g fill="#ef7c3a"><rect x="160" y="100" width="10" height="6" rx="2"/><rect x="100" y="98" width="10" height="6" rx="2"/></g>
+    <g fill="#e33b2e"><rect x="136" y="100" width="10" height="5" rx="2"/></g>
+    <path d="M60 92C60 80 70 78 76 86M240 92C240 80 230 78 224 86" stroke="#1b1b1b" stroke-width="5" fill="none"/>
+    <g transform="translate(262 118)"><rect x="-18" y="-24" width="36" height="46" rx="4" fill="#e33b2e" stroke="#8e1e14" stroke-width="2"/><rect x="-18" y="-12" width="36" height="16" fill="#fff"/><text x="0" y="0" text-anchor="middle" font-size="9" font-weight="700" fill="#e33b2e" font-family="sans-serif">TOMATO</text></g>
+    ${steam(150,58)}
+    ${label(150,190,'トマト缶の水分だけで煮込む')}
+  `,'無水シーフードカレー');
+
+  I.cornSoba = scene('cloth', `
+    <ellipse cx="120" cy="150" rx="84" ry="20" fill="#000" opacity=".12"/>
+    <path d="M44 104H196C196 140 170 156 120 156C70 156 44 140 44 104Z" fill="#fdfdfb" stroke="#c9c3b5" stroke-width="2"/>
+    <ellipse cx="120" cy="104" rx="76" ry="18" fill="#f3c843"/>
+    <ellipse cx="120" cy="104" rx="76" ry="18" fill="#ffe89a" opacity=".5"/>
+    <g fill="#ffd84a" stroke="#d9a92a" stroke-width=".8">${Array.from({length:16},(_,i)=>`<circle cx="${70+(i*23)%100}" cy="${96+(i*7)%14}" r="3"/>`).join('')}</g>
+    <g fill="#3f8a3a"><circle cx="150" cy="100" r="2"/><circle cx="96" cy="108" r="2"/><circle cx="130" cy="96" r="2"/></g>
+    <g transform="translate(238 120)">
+      <rect x="-56" y="-30" width="112" height="70" rx="6" fill="#d9b884" stroke="#8a6a3a" stroke-width="2"/>
+      <g stroke="#b8975f" stroke-width="1"><path d="M-56-20H56M-56-10H56M-56 0H56M-56 10H56M-56 20H56M-56 30H56"/></g>
+      ${Array.from({length:14},(_,i)=>`<path d="M${-44+i*6} -24c6 12-6 24 2 40" stroke="#6e5a44" stroke-width="2.6" fill="none" stroke-linecap="round"/>`).join('')}
+    </g>
+    <path d="M200 72L132 92" stroke="#7b5130" stroke-width="3" stroke-linecap="round"/><path d="M206 78L136 96" stroke="#7b5130" stroke-width="3" stroke-linecap="round"/>
+    ${label(120,184,'冷たいコーンスープ+めんつゆ')}
+    ${label(240,184,'そばをつけて食べる')}
+  `,'冷製コーンスープ蕎麦');
+
+  I.iceHotsand = scene('table', `
+    <g transform="translate(130 108)">
+      <rect x="60" y="-6" width="100" height="14" rx="7" fill="#2b2b2b"/>
+      <rect x="-70" y="-62" width="134" height="124" rx="18" fill="#2f2f2f" stroke="#141414" stroke-width="3"/>
+      <rect x="-60" y="-52" width="114" height="104" rx="12" fill="#3d3d3d"/>
+      <rect x="-50" y="-42" width="94" height="84" rx="14" fill="#d79a4e" stroke="#9a6326" stroke-width="2"/>
+      <g stroke="#7a4a1a" stroke-width="5" opacity=".65"><path d="M-44-28L38 30M-44 0L14 38M-20-38L40 6"/></g>
+    </g>
+    <g transform="translate(250 82)">
+      <path d="M-26-8H26L20 34H-20Z" fill="#fdf6ea" stroke="#c9b9a0" stroke-width="2"/>
+      <ellipse cx="0" cy="-8" rx="26" ry="7" fill="#fff" stroke="#c9b9a0" stroke-width="2"/>
+      <text x="0" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#8a5e36" font-family="sans-serif">ICE</text>
+    </g>
+    ${arrow('M232 120C214 132 196 134 186 130',184,129,190,'#fff7e0')}
+    <g transform="translate(250 166)"><path d="M-30 0C-30-14 30-14 30 0Z" fill="#d79a4e" stroke="#9a6326" stroke-width="1.6"/><rect x="-30" y="0" width="60" height="6" fill="#fff3d6"/><path d="M-30 6C-30 14 30 14 30 6Z" fill="#d79a4e" stroke="#9a6326" stroke-width="1.6"/></g>
+    ${label(130,30,'アイスをパンで挟んで焼く')}
+    ${label(250,190,'中は冷たいアイス')}
+  `,'アイス丸ごとホットサンド');
+
+  I.baconSkewer = scene('night', `
+    <g transform="translate(0 10)">
+    <rect x="40" y="120" width="240" height="44" rx="4" fill="#2a2a2a"/>
+    <g stroke="#555" stroke-width="2.5"><path d="M40 130H280M40 142H280M40 154H280"/></g>
+    <g fill="#ff7a1a" opacity=".6"><ellipse cx="100" cy="166" rx="40" ry="6"/><ellipse cx="220" cy="166" rx="40" ry="6"/></g>
+    ${[70,130,190].map(y0=>0).length?'':''}
+    ${[0,1,2].map(k=>{const y=82+k*22; return `<line x1="50" y1="${y}" x2="270" y2="${y}" stroke="#d9c39a" stroke-width="3" stroke-linecap="round"/>
+      ${[90,150,210].map(x=>`<g transform="translate(${x} ${y})">
+        <rect x="-22" y="-9" width="44" height="18" rx="8" fill="#f5f1e6"/>
+        <rect x="-22" y="-9" width="10" height="18" rx="3" fill="#d8ecc4"/><rect x="-12" y="-9" width="10" height="18" fill="#fffdf6"/>
+        <path d="M-16-11C-8-4-4 6 2 11M0-11C6-2 10 6 16 11M14-11C18-6 20-2 22 2" stroke="#b53a2a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M-16-11C-8-4-4 6 2 11M0-11C6-2 10 6 16 11" stroke="#f0a090" stroke-width="1.6" fill="none"/></g>`).join('')}`;}).join('')}
+    </g>
+    ${label(160,32,'ねぎ+チーズをベーコン巻き')}
+  `,'長ねぎとさけるチーズのベーコン巻き串焼');
+
+  I.riceBurger = scene('cloth', `
+    <ellipse cx="160" cy="166" rx="80" ry="14" fill="#000" opacity=".15"/>
+    <g transform="translate(160 100)">
+      <path d="M-62 40C-62 60 62 60 62 40V30H-62Z" fill="#f6f0df" stroke="#c9bb98" stroke-width="2"/>
+      <path d="M-62 30H62V40C62 46 -62 46 -62 40Z" fill="#c98a42"/>
+      <g fill="#fffaf0">${Array.from({length:14},(_,i)=>`<ellipse cx="${-54+i*8}" cy="${50+(i%2)*4}" rx="3" ry="1.6"/>`).join('')}</g>
+      <path d="M-66 24C-50 16-30 30-10 20S30 28 66 22L66 30H-66Z" fill="#4f8a3a"/>
+      <path d="M-64 6C-40 -4 -20 14 0 4S40 12 64 6V24H-64Z" fill="#7a3a22"/>
+      <g stroke="#a9583a" stroke-width="2" fill="none"><path d="M-50 12c8-4 16 4 24 0M-6 10c8-4 16 4 24 0M30 14c8-4 14 2 20 0"/></g>
+      <path d="M-62 4C-62-34 62-34 62 4Z" fill="#f6f0df" stroke="#c9bb98" stroke-width="2"/>
+      <path d="M-58 0C-56-26 56-26 58 0Z" fill="#d49a4a" opacity=".85"/>
+      <g fill="#fffaf0">${Array.from({length:18},(_,i)=>`<ellipse cx="${-48+(i*13)%96}" cy="${-16+(i*7)%14}" rx="3" ry="1.6"/>`).join('')}</g>
+      <path d="M-56 4C-30 8 30 8 56 4" stroke="#fff6cc" stroke-width="3" fill="none"/>
+    </g>
+    ${label(160,30,'焼きおにぎりで焼肉をサンド')}
+  `,'焼肉ライスバーガー');
+
+  I.curryPan = scene('table', `
+    <ellipse cx="150" cy="150" rx="94" ry="20" fill="#000" opacity=".2"/>
+    <rect x="62" y="132" width="180" height="20" rx="3" fill="#555"/><g stroke="#888" stroke-width="2"><path d="M70 132V152M90 132V152M110 132V152M130 132V152M150 132V152M170 132V152M190 132V152M210 132V152M230 132V152"/></g>
+    <g transform="translate(150 108)">
+      <path d="M-70 10C-74-22-40-40 0-40C40-40 74-22 70 10C66 34 40 42 0 42C-40 42-66 34-70 10Z" fill="#c9782e" stroke="#7a4214" stroke-width="2.5"/>
+      <g fill="#e8a65a">${Array.from({length:40},(_,i)=>`<circle cx="${-60+(i*29)%120}" cy="${-30+(i*17)%64}" r="2.2"/>`).join('')}</g>
+      <path d="M-10-8C10-20 40-12 44 6C30 14 0 10-10-8Z" fill="#8a4a14" stroke="#5a2a08" stroke-width="2"/>
+      <path d="M0-4C14-12 32-6 34 4C24 8 6 6 0-4Z" fill="#b5651d"/>
+      <g fill="#fff7b0" stroke="#d9b54a"><path d="M-46 -10l14-6 8 10-14 6z"/><path d="M-30 14l14-4 6 10-14 4z"/></g>
+    </g>
+    ${label(150,30,'カレーパンをひと手間アレンジ')}
+  `,'カレーパンのアレンジ');
+
+  I.sabaSushi = scene('table', `
+    <rect x="40" y="108" width="240" height="56" rx="6" fill="#e9d6ad" stroke="#a88a54" stroke-width="2"/>
+    ${[0,1,2,3,4].map(i=>{const x=58+i*44; return `<g transform="translate(${x} 92)">
+      <rect x="0" y="22" width="38" height="26" rx="3" fill="#fffaf0" stroke="#d9cfb8"/>
+      <path d="M-1 22C4 4 34 4 39 22Z" fill="#c5ccd6" stroke="#6c7a8c" stroke-width="1.5"/>
+      <path d="M2 18C10 8 28 8 36 18" stroke="#4a5a72" stroke-width="4" fill="none"/>
+      <path d="M6 14l4-4M16 12l4-4M26 13l4-4" stroke="#2e3a4e" stroke-width="2"/>
+      <path d="M4 20C12 14 26 14 34 20" stroke="#ffd2a6" stroke-width="2" fill="none" opacity=".7"/>
+      <ellipse cx="14" cy="12" rx="5" ry="2.5" fill="#f2a7b8"/><ellipse cx="24" cy="10" rx="4" ry="2" fill="#f7c6d2"/>
+      <rect x="0" y="40" width="38" height="4" fill="#3f8a3a" opacity=".8"/></g>`;}).join('')}
+    <g fill="#f7b6c8" opacity=".9"><circle cx="60" cy="50" r="5"/><circle cx="72" cy="44" r="4"/><circle cx="260" cy="60" r="5"/><circle cx="248" cy="52" r="3.5"/></g>
+    ${label(160,32,'炙りしめ鯖をラップで棒状に成形')}
+    ${label(160,190,'桜をあしらった春の棒寿司')}
+  `,'炙りしめ鯖の桜棒寿司');
+
+  return I;
+})();
+function ill(key, cls, alt){ return '<div class="media illus '+(cls||'')+'" title="'+(alt||'')+'">'+ILL[key]+'<span class="illus-tag">イラスト</span></div>'; }
+
+function extImg(src,cls,alt){ return '<div class="media '+(cls||'')+'"><img src="'+src+'" alt="'+(alt||'')+'" loading="lazy" decoding="async" onerror="this.parentNode.classList.add(\'noimg\')"></div>'; }
 /* ---------------- タブ切り替え ---------------- */
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
@@ -1027,7 +1571,7 @@ const craftSkills = [
 ];
 document.getElementById('craftList').innerHTML = craftSkills.map(c=>`
   <div class="gear-card">
-    <div class="img-wrap">${ph(({'バトニング':'axeLog','フェザースティック':'woodCut'})[c.name]||'logs','gear-img',c.name,800)}${c.svg ? `<div class="diagram-badge" title="図解">${c.svg}</div>` : ''}</div>
+    ${ill(['batoning','featherStick'][craftSkills.indexOf(c)],'gear-img',c.name)}
     <div class="gear-body">
       <h3>${c.name}</h3>
       <p class="gear-price en">${c.en}</p>
@@ -1045,7 +1589,7 @@ const fireLays = [
 ];
 document.getElementById('fireLayList').innerHTML = fireLays.map(c=>`
   <div class="gear-card">
-    <div class="img-wrap">${ph(['campfire','lightedBonfire','firePit2','bonfireForest2'][fireLays.indexOf(c)]||'bonfire','gear-img',c.name,800)}${c.svg ? `<div class="diagram-badge" title="図解">${c.svg}</div>` : ''}</div>
+    ${ill(['logCabin','teepee','starFire','leanTo'][fireLays.indexOf(c)],'gear-img',c.name)}
     <div class="gear-body">
       <h3>${c.name}</h3>
       <p class="gear-price en">${c.en}</p>
@@ -1063,7 +1607,7 @@ const fireStarters = [
 ];
 document.getElementById('fireStarterList').innerHTML = fireStarters.map(c=>`
   <div class="gear-card">
-    <div class="img-wrap">${ph(['lightingFire','firePit','burningWood','bonfireMountain'][fireStarters.indexOf(c)]||'bonfire','gear-img',c.name,800)}${c.svg ? `<div class="diagram-badge" title="図解">${c.svg}</div>` : ''}</div>
+    ${ill(['solidStarter','gelStarter','juteTwine','ferroRod'][fireStarters.indexOf(c)],'gear-img',c.name)}
     <div class="gear-body">
       <h3>${c.name}</h3>
       
@@ -1159,8 +1703,16 @@ const ropeKnots = [
   {key:"hitch2", name:"ふた結び", en:"Two Half Hitches", desc:"ロープを杭に1周させ、本線に同じ向きで2回巻きつける固定力の高い結び方。ペグや杭にロープを固定する時の定番として使われる。", q:"ふた結び 結び方 キャンプ"},
   {key:"trucker", name:"トラッカーズヒッチ(南京結び)", en:"Trucker's Hitch", desc:"滑車のような仕組みで、少ない力でもロープを強くピンと張れる結び方。大型タープをたるみなく張りたい時に活躍する。", q:"トラッカーズヒッチ 南京結び 結び方"},
 ];
+const knotPhoto = {
+  bowline:"f/fa/Knot_bowline.jpg",
+  taut:"7/7e/TautlineHitch-ABOK-1800.jpg",
+  clove:"3/39/Webeleinenstek.jpg",
+  hitch2:"7/7e/Two_half_hitches_3.jpg",
+  trucker:"2/20/Truckers_hitch.jpg"
+};
 document.getElementById('ropeList').innerHTML = ropeKnots.map(r=>`
   <div class="gear-card">
+    <div class="img-wrap">${extImg('https://upload.wikimedia.org/wikipedia/commons/'+knotPhoto[r.key],'gear-img knot-photo',r.name+'の完成形')}<span class="photo-cap">完成形(実物)</span></div>
     <div class="gear-body">
       <h3>${r.name}</h3>
       <p class="gear-price">${r.en}</p>
@@ -1191,7 +1743,7 @@ function saveMyCombos(list){
 }
 let myCombos = loadMyCombos();
 
-const comboPhoto = ['kettleFire','skilletGrill','twoBlueChairs','rvCouple'];
+const comboPhoto = ['ill:cookerStack','skilletGrill','twoBlueChairs','ill:containerStack'];
 function renderCombos(){
   const merged = [
     ...myCombos.map((c,i)=>({...c, mine:true, _idx:i})),
@@ -1200,7 +1752,7 @@ function renderCombos(){
   document.getElementById('comboList').innerHTML = merged.map(c=>`
     <div class="tip-card">
       ${c.mine ? `<button class="term-remove" onclick="removeMyCombo(${c._idx})" title="削除">✕</button>` : ''}
-      ${ph(c._p || pick(['potFirewood','manChairDrink','coffeeLake','tentsWater'],c.title),'tip-img',c.title,1000)}
+      ${(c._p||'').startsWith('ill:') ? ill(c._p.slice(4),'tip-img',c.title) : ph(c._p || pick(['potFirewood','manChairDrink','coffeeLake','tentsWater'],c.title),'tip-img',c.title,1000)}
       <div class="tip-body">
         <h3>${c.title}</h3>
         <p>${c.body}</p>
@@ -1510,6 +2062,41 @@ const meshiPool = {
   "朝食":["coffeeLake","coffeeWoman","kettleFire2","stovePrep"],
   "デザート":["bonfireNight","mug","lightedBonfire"]
 };
+const meshiExact = {
+  "焼きマシュマロ":"u:1745354554779-85ac0819aa2b",
+  "シメの焼きそば":"i:yakisoba",
+  "スキレットアヒージョ":"u:1762631882829-144dbda01e21",
+  "鮭のホイル焼き":"i:salmonFoil",
+  "さば缶で簡単アヒージョ":"i:sabaCan",
+  "スキレットでペッパーライス":"i:pepperRice",
+  "タンドリーチキンのぎゅうぎゅう焼き":"i:tandoori",
+  "カマンベールチーズフォンデュ":"i:camembert",
+  "フライパンひとつでチキンパエリア":"u:1694685367640-05d6624e57f1",
+  "丸ごと1本バターアヒージョ":"i:butterAjillo",
+  "ワンパン和風ペペロンチーノ":"i:peperoncino",
+  "ホットサンドメーカーで肉巻きおにぎり":"i:nikumaki",
+  "無水シーフードカレー":"i:curry",
+  "もみもみホットケーキ":"u:1555813456-94a3dd418cd3",
+  "ウインナーパン":"u:1612392062631-94dd858cba88",
+  "チーズキューブ":"u:1778449665117-2c607bbc7415",
+  "冷製コーンスープ蕎麦":"i:cornSoba",
+  "アイス丸ごとホットサンド":"i:iceHotsand",
+  "長ねぎとさけるチーズのベーコン巻き串焼":"i:baconSkewer",
+  "焼肉ライスバーガー":"i:riceBurger",
+  "カレーパンの贅沢アレンジ":"i:curryPan",
+  "パイナップルライス":"w:https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg/960px-Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg",
+  "炙りしめ鯖の桜棒寿司":"i:sabaSushi"
+};
+function meshiMedia(m){
+  const v = !m.mine && meshiExact[m.name];
+  if(v){
+    const t=v.slice(0,2), x=v.slice(2);
+    if(t==='i:') return ill(x,'gear-img',m.name);
+    if(t==='w:') return extImg(x,'gear-img',m.name);
+    return extImg('https://images.unsplash.com/photo-'+x+'?auto=format&fit=crop&w=800&q=70','gear-img',m.name);
+  }
+  return ph(meshiPhoto(m),'gear-img',m.name,800);
+}
 function meshiPhoto(m){
   const pool = meshiPool[m.cat] || meshiPool["主食"];
   if(!m.mine){ const same = meshiRecipes.filter(x=>x.cat===m.cat); const i = same.indexOf(meshiRecipes.find(x=>x.name===m.name)); if(i>=0) return pool[i%pool.length]; }
@@ -1524,7 +2111,7 @@ function renderMeshi(){
   document.getElementById('meshiList').innerHTML = filtered.map(m=>`
     <div class="gear-card">
       ${m.mine ? `<button class="term-remove" onclick="removeMyMeshi(${m._idx})" title="削除">✕</button>` : ''}
-      ${ph(meshiPhoto(m),'gear-img',m.name,800)}
+      ${meshiMedia(m)}
       <div class="gear-body">
         <h3>${m.name}</h3>
         <p class="gear-price">${m.mine ? '自分で追加したレシピ' : (m.meta||'')}</p>
