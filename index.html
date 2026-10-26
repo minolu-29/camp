@@ -397,6 +397,11 @@ window.addEventListener('error', function(e){
   .illus-tag{position:absolute;right:10px;top:10px;background:rgba(255,253,249,.88);color:var(--ink-2);font-size:10px;font-weight:700;letter-spacing:.08em;padding:2px 9px;border-radius:100px;}
   .img-wrap:has(.noimg){display:none;}
   .tip-card .tip-img.illus{aspect-ratio:16/10;}
+  .media.yt{display:block;aspect-ratio:16/9 !important;height:auto;background:#1c1c1c;}
+  .media.yt img{object-fit:cover;}
+  .yt-play{position:absolute;left:50%;top:50%;width:58px;height:40px;margin:-20px 0 0 -29px;border-radius:12px;background:rgba(204,0,0,.9);box-shadow:0 4px 14px rgba(0,0,0,.3);}
+  .yt-play::after{content:"";position:absolute;left:23px;top:12px;border-style:solid;border-width:8px 0 8px 14px;border-color:transparent transparent transparent #fff;}
+  .yt-tag{position:absolute;right:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 9px;border-radius:100px;}
   .knot-photo{background:#e9e4d8;}
   .knot-photo img{object-fit:contain;background:#f3efe6;}
   .photo-cap{position:absolute;left:10px;bottom:10px;background:rgba(34,37,31,.78);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:100px;}
@@ -654,7 +659,7 @@ window.addEventListener('error', function(e){
   <div class="footer-inner">
     <p class="footer-logo">CAMP LAB</p>
     <p class="footer-copy">つくって、燃やして、たたむまで。</p>
-    <p class="footer-meta">Photos: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> / Wikimedia Commons (<a href="https://commons.wikimedia.org/wiki/File:Knot_bowline.jpg" target="_blank" rel="noopener">1</a> <a href="https://commons.wikimedia.org/wiki/File:TautlineHitch-ABOK-1800.jpg" target="_blank" rel="noopener">2</a> <a href="https://commons.wikimedia.org/wiki/File:Webeleinenstek.jpg" target="_blank" rel="noopener">3</a> <a href="https://commons.wikimedia.org/wiki/File:Two_half_hitches_3.jpg" target="_blank" rel="noopener">4</a> <a href="https://commons.wikimedia.org/wiki/File:Truckers_hitch.jpg" target="_blank" rel="noopener">5</a> <a href="https://commons.wikimedia.org/wiki/File:Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg" target="_blank" rel="noopener">6</a>)<br>Illustrations: CAMP LAB<br><a href="privacy.html">プライバシーポリシー</a><br>v2026.10.26b</p>
+    <p class="footer-meta">Photos: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> / Wikimedia Commons (<a href="https://commons.wikimedia.org/wiki/File:Knot_bowline.jpg" target="_blank" rel="noopener">1</a> <a href="https://commons.wikimedia.org/wiki/File:TautlineHitch-ABOK-1800.jpg" target="_blank" rel="noopener">2</a> <a href="https://commons.wikimedia.org/wiki/File:Webeleinenstek.jpg" target="_blank" rel="noopener">3</a> <a href="https://commons.wikimedia.org/wiki/File:Two_half_hitches_3.jpg" target="_blank" rel="noopener">4</a> <a href="https://commons.wikimedia.org/wiki/File:Truckers_hitch.jpg" target="_blank" rel="noopener">5</a> <a href="https://commons.wikimedia.org/wiki/File:Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg" target="_blank" rel="noopener">6</a>)<br>動画サムネイル: YouTube(各動画の投稿者)<br><a href="privacy.html">プライバシーポリシー</a><br>v2026.10.26c</p>
   </div>
 </footer>
 
@@ -1198,6 +1203,22 @@ const ILL = (()=>{
 })();
 function ill(key, cls, alt){ return '<div class="media illus '+(cls||'')+'" title="'+(alt||'')+'">'+ILL[key]+'<span class="illus-tag">イラスト</span></div>'; }
 
+const YT = {batoning:"wuSrsqtYfLs", featherStick:"iQ0cHN6Wm14", logCabin:"ujPKSIk4x68", teepee:"aX5Rl5NQkgE", starFire:"qm_SSKzO8hU", leanTo:"mn4fzIaViP4",
+  solidStarter:"IyxVzs-GScs", gelStarter:"N0gH5wWcA9o", juteTwine:"vKXFuBl4Zo0", ferroRod:"PE-6SjyXQIY",
+  containerStack:"BWVk6RKfzbI", cookerStack:"9wK7glcGfYs",
+  yakisoba:"y5ziUzHqJDI", salmonFoil:"sP3oPccml64", sabaCan:"bVkMR4WNBxc", pepperRice:"t1m0VedcQc0", tandoori:"MWobk3OZPpA", camembert:"CVqAUD1IqCY",
+  butterAjillo:"LxsdTbBr1Rs", peperoncino:"g-r-aCSLYeo", nikumaki:"Q5uAlgZIW0o", curry:"hCfDfFcrGcc", cornSoba:"6D9enuG0olk", baconSkewer:"WHArGWntLKs",
+  riceBurger:"zWz0hZTjdG4", curryPan:"J96csFVBw-U", sabaSushi:"qedmk1_JMxA"};
+function ytHref(k,q){ return YT[k] ? 'https://www.youtube.com/watch?v='+YT[k] : 'https://www.youtube.com/results?search_query='+encodeURIComponent(q||''); }
+function yt(k,cls,alt){
+  const id=YT[k]; if(!id) return ill(k,cls,alt);
+  return '<a class="media yt '+(cls||'')+'" href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener" aria-label="'+(alt||'')+'の動画を見る">'
+   +'<img src="https://i.ytimg.com/vi/'+id+'/maxresdefault.jpg" alt="'+(alt||'')+'" loading="lazy" decoding="async" '
+   +'onload="if(this.naturalWidth<200&&!this.dataset.f){this.dataset.f=1;this.src=\'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg\'}" '
+   +'onerror="if(!this.dataset.f){this.dataset.f=1;this.src=\'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg\'}else{this.parentNode.classList.add(\'noimg\')}">'
+   +'<span class="yt-play" aria-hidden="true"></span><span class="yt-tag">YouTube</span></a>';
+}
+
 function extImg(src,cls,alt){ return '<div class="media '+(cls||'')+'"><img src="'+src+'" alt="'+(alt||'')+'" loading="lazy" decoding="async" onerror="this.parentNode.classList.add(\'noimg\')"></div>'; }
 /* ---------------- タブ切り替え ---------------- */
 document.querySelectorAll('.tab-btn').forEach(btn=>{
@@ -1571,12 +1592,12 @@ const craftSkills = [
 ];
 document.getElementById('craftList').innerHTML = craftSkills.map(c=>`
   <div class="gear-card">
-    ${ill(['batoning','featherStick'][craftSkills.indexOf(c)],'gear-img',c.name)}
+    ${yt(['batoning','featherStick'][craftSkills.indexOf(c)],'gear-img',c.name)}
     <div class="gear-body">
       <h3>${c.name}</h3>
       <p class="gear-price en">${c.en}</p>
       <p class="gear-meta">${c.desc}</p>
-      <a class="video-link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(c.q)}">作り方動画を見る →</a>
+      <a class="video-link" target="_blank" href="${ytHref(['batoning','featherStick'][craftSkills.indexOf(c)],c.q)}">作り方動画を見る →</a>
     </div>
   </div>
 `).join('');
@@ -1589,12 +1610,12 @@ const fireLays = [
 ];
 document.getElementById('fireLayList').innerHTML = fireLays.map(c=>`
   <div class="gear-card">
-    ${ill(['logCabin','teepee','starFire','leanTo'][fireLays.indexOf(c)],'gear-img',c.name)}
+    ${yt(['logCabin','teepee','starFire','leanTo'][fireLays.indexOf(c)],'gear-img',c.name)}
     <div class="gear-body">
       <h3>${c.name}</h3>
       <p class="gear-price en">${c.en}</p>
       <p class="gear-meta">${c.desc}</p>
-      <a class="video-link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(c.q)}">組み方動画を見る →</a>
+      <a class="video-link" target="_blank" href="${ytHref(['logCabin','teepee','starFire','leanTo'][fireLays.indexOf(c)],c.q)}">組み方動画を見る →</a>
     </div>
   </div>
 `).join('');
@@ -1607,12 +1628,12 @@ const fireStarters = [
 ];
 document.getElementById('fireStarterList').innerHTML = fireStarters.map(c=>`
   <div class="gear-card">
-    ${ill(['solidStarter','gelStarter','juteTwine','ferroRod'][fireStarters.indexOf(c)],'gear-img',c.name)}
+    ${yt(['solidStarter','gelStarter','juteTwine','ferroRod'][fireStarters.indexOf(c)],'gear-img',c.name)}
     <div class="gear-body">
       <h3>${c.name}</h3>
       
       <p class="gear-meta">${c.desc}</p>
-      <a class="video-link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(c.q)}">使い方動画を見る →</a>
+      <a class="video-link" target="_blank" href="${ytHref(['solidStarter','gelStarter','juteTwine','ferroRod'][fireStarters.indexOf(c)],c.q)}">使い方動画を見る →</a>
     </div>
   </div>
 `).join('');
@@ -1744,20 +1765,21 @@ function saveMyCombos(list){
 let myCombos = loadMyCombos();
 
 const comboPhoto = ['ill:cookerStack','skilletGrill','twoBlueChairs','ill:containerStack'];
+const comboYT = ['cookerStack',null,null,'containerStack'];
 function renderCombos(){
   const merged = [
     ...myCombos.map((c,i)=>({...c, mine:true, _idx:i})),
-    ...combos.map((c,i)=>({...c, _p:comboPhoto[i]}))
+    ...combos.map((c,i)=>({...c, _p:comboPhoto[i], _y:comboYT[i]}))
   ];
   document.getElementById('comboList').innerHTML = merged.map(c=>`
     <div class="tip-card">
       ${c.mine ? `<button class="term-remove" onclick="removeMyCombo(${c._idx})" title="削除">✕</button>` : ''}
-      ${(c._p||'').startsWith('ill:') ? ill(c._p.slice(4),'tip-img',c.title) : ph(c._p || pick(['potFirewood','manChairDrink','coffeeLake','tentsWater'],c.title),'tip-img',c.title,1000)}
+      ${c._y ? yt(c._y,'tip-img',c.title) : ph(c._p || pick(['potFirewood','manChairDrink','coffeeLake','tentsWater'],c.title),'tip-img',c.title,1000)}
       <div class="tip-body">
         <h3>${c.title}</h3>
         <p>${c.body}</p>
         <span class="tip-source">${c.mine ? '自分で追加したコツ' : '編集部キュレーション'}</span>
-        <a class="video-link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent('キャンプ スタッキング ' + c.title)}">関連動画を見る →</a>
+        <a class="video-link" target="_blank" href="${ytHref(c._y,'キャンプ スタッキング ' + c.title)}">関連動画を見る →</a>
       </div>
     </div>
   `).join('');
@@ -2064,39 +2086,41 @@ const meshiPool = {
 };
 const meshiExact = {
   "焼きマシュマロ":"u:1745354554779-85ac0819aa2b",
-  "シメの焼きそば":"i:yakisoba",
+  "シメの焼きそば":"y:yakisoba",
   "スキレットアヒージョ":"u:1762631882829-144dbda01e21",
-  "鮭のホイル焼き":"i:salmonFoil",
-  "さば缶で簡単アヒージョ":"i:sabaCan",
-  "スキレットでペッパーライス":"i:pepperRice",
-  "タンドリーチキンのぎゅうぎゅう焼き":"i:tandoori",
-  "カマンベールチーズフォンデュ":"i:camembert",
+  "鮭のホイル焼き":"y:salmonFoil",
+  "さば缶で簡単アヒージョ":"y:sabaCan",
+  "スキレットでペッパーライス":"y:pepperRice",
+  "タンドリーチキンのぎゅうぎゅう焼き":"y:tandoori",
+  "カマンベールチーズフォンデュ":"y:camembert",
   "フライパンひとつでチキンパエリア":"u:1694685367640-05d6624e57f1",
-  "丸ごと1本バターアヒージョ":"i:butterAjillo",
-  "ワンパン和風ペペロンチーノ":"i:peperoncino",
-  "ホットサンドメーカーで肉巻きおにぎり":"i:nikumaki",
-  "無水シーフードカレー":"i:curry",
+  "丸ごと1本バターアヒージョ":"y:butterAjillo",
+  "ワンパン和風ペペロンチーノ":"y:peperoncino",
+  "ホットサンドメーカーで肉巻きおにぎり":"y:nikumaki",
+  "無水シーフードカレー":"y:curry",
   "もみもみホットケーキ":"u:1555813456-94a3dd418cd3",
   "ウインナーパン":"u:1612392062631-94dd858cba88",
   "チーズキューブ":"u:1778449665117-2c607bbc7415",
-  "冷製コーンスープ蕎麦":"i:cornSoba",
-  "アイス丸ごとホットサンド":"i:iceHotsand",
-  "長ねぎとさけるチーズのベーコン巻き串焼":"i:baconSkewer",
-  "焼肉ライスバーガー":"i:riceBurger",
-  "カレーパンの贅沢アレンジ":"i:curryPan",
+  "冷製コーンスープ蕎麦":"y:cornSoba",
+  "アイス丸ごとホットサンド":"u:1633889506042-9d995e5e8ac1",
+  "長ねぎとさけるチーズのベーコン巻き串焼":"y:baconSkewer",
+  "焼肉ライスバーガー":"y:riceBurger",
+  "カレーパンの贅沢アレンジ":"y:curryPan",
   "パイナップルライス":"w:https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg/960px-Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg",
-  "炙りしめ鯖の桜棒寿司":"i:sabaSushi"
+  "炙りしめ鯖の桜棒寿司":"y:sabaSushi"
 };
 function meshiMedia(m){
   const v = !m.mine && meshiExact[m.name];
   if(v){
     const t=v.slice(0,2), x=v.slice(2);
+    if(t==='y:') return yt(x,'gear-img',m.name);
     if(t==='i:') return ill(x,'gear-img',m.name);
     if(t==='w:') return extImg(x,'gear-img',m.name);
     return extImg('https://images.unsplash.com/photo-'+x+'?auto=format&fit=crop&w=800&q=70','gear-img',m.name);
   }
   return ph(meshiPhoto(m),'gear-img',m.name,800);
 }
+function meshiHref(m){ const v=!m.mine&&meshiExact[m.name]; return (v&&v.startsWith('y:')) ? ytHref(v.slice(2)) : 'https://www.youtube.com/results?search_query='+encodeURIComponent('キャンプ飯 ' + m.name); }
 function meshiPhoto(m){
   const pool = meshiPool[m.cat] || meshiPool["主食"];
   if(!m.mine){ const same = meshiRecipes.filter(x=>x.cat===m.cat); const i = same.indexOf(meshiRecipes.find(x=>x.name===m.name)); if(i>=0) return pool[i%pool.length]; }
@@ -2117,7 +2141,7 @@ function renderMeshi(){
         <p class="gear-price">${m.mine ? '自分で追加したレシピ' : (m.meta||'')}</p>
         <p class="gear-meta">${m.desc}</p>
         <div class="site-tags" style="margin:0 0 14px;"><span class="site-tag">${m.cat}</span></div>
-        <a class="video-link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent('キャンプ飯 ' + m.name)}">作り方動画を見る →</a>
+        <a class="video-link" target="_blank" href="${meshiHref(m)}">作り方動画を見る →</a>
       </div>
     </div>
   `).join('');
