@@ -1525,7 +1525,7 @@ const gearImg = {
   "ソロテント(1人用)":"1571863533956-01c88e79957e","ソロクッカーセット":"1546890948-82b45c9712c2","コンパクトヘキサタープ":"1625834509314-3b12c6153624","ミニ焚き火台":"1598833775803-99eea89ad6a1",
   "シングルバーナー":"1522041350204-22285237eeca","大型ヘキサ/レクタタープ":"1776493928919-b8e9ae8de5d0","ツーバーナー":"1527195575508-5b138d14a35b","大型ローテーブル+ベンチ":"1714761127637-cc51b5cbf7b6",
   "ツールームテント(大型)":"1631551221140-97f450f8f25d","キッズ用チェア&テーブル":"1674230316788-d9c8b92f0d63","ファミリー用大型クーラーボックス":"1647891935769-c8e1e0cfcf72",
-  "インフレーターマット":"1698731048404-1c12d7189e48","LEDランタン":"1504744373149-59d6d64c86f3","ペグ&ハンマーセット":"1534187886935-1e1236e856c3","折りたたみ焚き火台":"1507498016354-887e17c7d231",
+  "インフレーターマット":"1698731048404-1c12d7189e48","LEDランタン":"1504744373149-59d6d64c86f3","ペグ&ハンマーセット":"img/peg-hammer.jpg","折りたたみ焚き火台":"1507498016354-887e17c7d231",
   "コット(簡易ベッド)":"1653905875826-4db92ae89a08","アウトドア扇風機/サーキュレーター":"1564510182791-29645da7fac4","スクリーンタープ(メッシュ)":"1586806974602-38abd4296951",
   "蚊帳インナー":"1747056032562-1c73b853a79d","UVカット遮光タープ":"1679633269608-91e7ef09dc4f","ソフトクーラーバッグ(ソロ用)":"1685395802119-674108d9c7b8",
   "虫除けランタン":"1646604450411-59a8cbae655f","サンシェード(オープンタイプ)":"1682342278803-21b8f6179c26","冬用テント(スカート付き)":"1455496231601-e6195da1f841",
@@ -1540,7 +1540,7 @@ function renderGears(){
   document.getElementById('gearCount').textContent = `${list.length}件のギアを表示中`;
   document.getElementById('gearList').innerHTML = list.map(g=>`
     <div class="gear-card">
-      ${gearImg[g.name] ? extImg('https://images.unsplash.com/photo-'+gearImg[g.name]+'?auto=format&fit=crop&w=800&q=70','gear-img',g.name) : ph(pick(['orangeTentTrees','tentField','tentSunset'],g.name),'gear-img',g.name,800)}
+      ${gearImg[g.name] ? extImg(gearImg[g.name].startsWith('img/') ? gearImg[g.name] : 'https://images.unsplash.com/photo-'+gearImg[g.name]+'?auto=format&fit=crop&w=800&q=70','gear-img',g.name) : ph(pick(['orangeTentTrees','tentField','tentSunset'],g.name),'gear-img',g.name,800)}
       <div class="gear-body">
         <h3>${g.name}</h3>
         <p class="gear-price">${g.price}</p>
