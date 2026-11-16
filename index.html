@@ -440,6 +440,32 @@ window.addEventListener('error', function(e){
   .fb-form small{display:block;font-size:11.5px;color:var(--ink-2);line-height:1.6;margin-top:2px;}
   .fb-form-ico{flex:0 0 38px;height:38px;border-radius:50%;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--forest);border:1px solid var(--line);}
   footer{padding-bottom:40px;}
+
+  /* ---------- オフライン動画 ---------- */
+  .off-row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;}
+  .off-btn{border:1px dashed var(--moss);background:var(--linen);color:var(--forest);border-radius:100px;padding:8px 14px;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.04em;cursor:pointer;}
+  .off-btn.saved{border-style:solid;border-color:var(--forest);background:var(--forest);color:#fff;}
+  .off-del{border:1px solid var(--line);background:none;color:var(--mute);border-radius:100px;padding:7px 12px;font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer;}
+  .vid-fab{position:fixed;right:16px;bottom:72px;z-index:60;display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:100px;padding:10px 14px;background:var(--paper);color:var(--forest);font-family:inherit;font-size:12px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.15);cursor:pointer;}
+  .vid-fab i{font-style:normal;min-width:18px;height:18px;border-radius:9px;background:var(--ember);color:#fff;font-size:10.5px;display:flex;align-items:center;justify-content:center;padding:0 5px;}
+  .vid-fab i:empty{display:none;}
+  .vid-item{display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--linen-2);padding:10px 0;}
+  .vid-item-main{flex:1;text-align:left;border:none;background:none;font-family:inherit;cursor:pointer;padding:0;color:var(--ink);}
+  .vid-item-main b{display:block;font-size:14px;color:var(--forest);}
+  .vid-item-main small{font-size:11px;color:var(--mute);}
+  .vid-sec{display:inline-block;font-size:10.5px;color:var(--moss);border:1px solid var(--line);border-radius:100px;padding:0 8px;margin-bottom:2px;}
+  .vid-empty{font-size:13px;color:var(--mute);line-height:1.9;}
+  .vid-modal{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:16px;}
+  .vid-modal.open{display:flex;}
+  .vid-sheet{width:100%;max-width:720px;}
+  .vid-head{display:flex;align-items:center;justify-content:space-between;color:#fff;margin-bottom:10px;gap:10px;}
+  .vid-head b{font-size:14px;}
+  .vid-close{width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:14px;cursor:pointer;flex-shrink:0;}
+  .vid-box video{width:100%;max-height:75vh;border-radius:12px;background:#000;display:block;}
+  .offline-bar{display:none;position:fixed;top:0;left:0;right:0;z-index:70;background:var(--ember);color:#fff;font-size:12px;font-weight:700;text-align:center;padding:6px 12px;}
+  body.is-offline .offline-bar{display:block;}
+  body.is-offline .media.yt{filter:grayscale(.6);}
+  body.is-offline nav.tabs{top:30px;}
 </style>
 </head>
 <body>
@@ -693,6 +719,24 @@ window.addEventListener('error', function(e){
 
 </main>
 
+<button class="vid-fab" type="button" data-open-videos aria-label="保存した動画">📥<span>保存動画</span><i id="vidFabCount"></i></button>
+<div class="offline-bar">オフライン中 ・ 保存した動画と保存済みのページは見られます</div>
+<div class="fb-modal" id="vidListModal" role="dialog" aria-modal="true" aria-labelledby="vidListTitle">
+  <div class="fb-sheet">
+    <button class="fb-close vidlist-close" type="button" aria-label="閉じる">✕</button>
+    <p class="eyebrow">Offline Videos</p>
+    <h3 id="vidListTitle">保存した動画</h3>
+    <p class="fb-lead">この端末に保存した動画です。電波のないキャンプ場でも再生できます。</p>
+    <div id="vidList"></div>
+    <p class="fb-note" id="vidUsage"></p>
+  </div>
+</div>
+<div class="vid-modal" id="vidModal" role="dialog" aria-modal="true">
+  <div class="vid-sheet">
+    <div class="vid-head"><b class="vid-title"></b><button class="vid-close" type="button" aria-label="閉じる">✕</button></div>
+    <div class="vid-box"></div>
+  </div>
+</div>
 <button class="fb-fab" type="button" data-open-feedback aria-label="フィードバックを送る">💬<span>ご意見</span></button>
 <div class="fb-modal" id="fbModal" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
   <div class="fb-sheet">
@@ -716,7 +760,7 @@ window.addEventListener('error', function(e){
   <div class="footer-inner">
     <p class="footer-logo">CAMP LAB</p>
     <p class="footer-copy">つくって、燃やして、たたむまで。</p>
-    <p class="footer-meta">Photos: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> / Wikimedia Commons (<a href="https://commons.wikimedia.org/wiki/File:Knot_bowline.jpg" target="_blank" rel="noopener">1</a> <a href="https://commons.wikimedia.org/wiki/File:TautlineHitch-ABOK-1800.jpg" target="_blank" rel="noopener">2</a> <a href="https://commons.wikimedia.org/wiki/File:Webeleinenstek.jpg" target="_blank" rel="noopener">3</a> <a href="https://commons.wikimedia.org/wiki/File:Two_half_hitches_3.jpg" target="_blank" rel="noopener">4</a> <a href="https://commons.wikimedia.org/wiki/File:Truckers_hitch.jpg" target="_blank" rel="noopener">5</a> <a href="https://commons.wikimedia.org/wiki/File:Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg" target="_blank" rel="noopener">6</a>)<br>動画: YouTube埋め込み(各動画の投稿者)<br><a href="privacy.html">プライバシーポリシー</a> ・ <a href="#" data-open-feedback>フィードバックを送る</a><br>v2026.10.27</p>
+    <p class="footer-meta">Photos: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> / Wikimedia Commons (<a href="https://commons.wikimedia.org/wiki/File:Knot_bowline.jpg" target="_blank" rel="noopener">1</a> <a href="https://commons.wikimedia.org/wiki/File:TautlineHitch-ABOK-1800.jpg" target="_blank" rel="noopener">2</a> <a href="https://commons.wikimedia.org/wiki/File:Webeleinenstek.jpg" target="_blank" rel="noopener">3</a> <a href="https://commons.wikimedia.org/wiki/File:Two_half_hitches_3.jpg" target="_blank" rel="noopener">4</a> <a href="https://commons.wikimedia.org/wiki/File:Truckers_hitch.jpg" target="_blank" rel="noopener">5</a> <a href="https://commons.wikimedia.org/wiki/File:Pineapple_fried_rice_at_Banana_Leaf_in_Milpitas,_California.jpg" target="_blank" rel="noopener">6</a>)<br>動画: YouTube埋め込み(各動画の投稿者)<br><a href="privacy.html">プライバシーポリシー</a> ・ <a href="#" data-open-feedback>フィードバックを送る</a> ・ <a href="#" data-open-videos>保存した動画</a><br>v2026.11.17</p>
   </div>
 </footer>
 
@@ -1465,6 +1509,7 @@ function renderOrder(style){
         <ol class="order-list teardown">${d.teardown.map(s=>`<li>${s}</li>`).join('')}</ol>
       </div>
       <a class="order-video" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(d.q)}">${styleLabelFull[style]}の設営動画を見る →</a>
+      ${offBtn('order:'+style, styleLabelFull[style]+'の設営')}
     </div>
   `;
 }
@@ -1550,6 +1595,7 @@ function renderGears(){
           ${g.styles.map(s=>`<span class="site-tag">${styleLabel[s]}</span>`).join('')}
         </div>
         <a class="video-link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(g.q)}">設営動画を見る →</a>
+        ${offBtn('gear:'+g.name, g.name)}
       </div>
     </div>
   `).join('');
@@ -1662,6 +1708,7 @@ document.getElementById('craftList').innerHTML = craftSkills.map(c=>`
       <p class="gear-price en">${c.en}</p>
       <p class="gear-meta">${c.desc}</p>
       <a class="video-link" target="_blank" href="${ytHref(['batoning','featherStick'][craftSkills.indexOf(c)],c.q)}">作り方動画を見る →</a>
+      ${offBtn('fire:'+c.name, c.name)}
     </div>
   </div>
 `).join('');
@@ -1680,6 +1727,7 @@ document.getElementById('fireLayList').innerHTML = fireLays.map(c=>`
       <p class="gear-price en">${c.en}</p>
       <p class="gear-meta">${c.desc}</p>
       <a class="video-link" target="_blank" href="${ytHref(['logCabin','teepee','starFire','leanTo'][fireLays.indexOf(c)],c.q)}">組み方動画を見る →</a>
+      ${offBtn('fire:'+c.name, c.name)}
     </div>
   </div>
 `).join('');
@@ -1698,6 +1746,7 @@ document.getElementById('fireStarterList').innerHTML = fireStarters.map(c=>`
       
       <p class="gear-meta">${c.desc}</p>
       <a class="video-link" target="_blank" href="${ytHref(['solidStarter','gelStarter','juteTwine','ferroRod'][fireStarters.indexOf(c)],c.q)}">使い方動画を見る →</a>
+      ${offBtn('fire:'+c.name, c.name)}
     </div>
   </div>
 `).join('');
@@ -1805,6 +1854,7 @@ document.getElementById('ropeList').innerHTML = ropeKnots.map(r=>`
       <p class="knot-legend"><i class="lg-s"></i>本線 <i class="lg-e"></i>先端(動かす側)</p>
       <p class="gear-meta">${r.desc}</p>
       <a class="video-link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(r.q)}">結び方動画を見る →</a>
+      ${offBtn('rope:'+r.name, r.name)}
     </div>
   </div>
 `).join('');
@@ -1844,6 +1894,7 @@ function renderCombos(){
         <p>${c.body}</p>
         <span class="tip-source">${c.mine ? '自分で追加したコツ' : '編集部キュレーション'}</span>
         <a class="video-link" target="_blank" href="${ytHref(c._y,'キャンプ スタッキング ' + c.title)}">関連動画を見る →</a>
+        ${offBtn('combo:'+c.title, c.title)}
       </div>
     </div>
   `).join('');
@@ -2153,6 +2204,129 @@ async function hydratePhotos(root){
 }
 new MutationObserver(()=>hydratePhotos()).observe(document.body,{childList:true,subtree:true});
 
+/* ---------------- オフライン動画(端末内に保存) ---------------- */
+const VideoDB = (()=>{
+  let dbp=null;
+  function open(){ if(dbp) return dbp; dbp=new Promise((res,rej)=>{ try{ const r=indexedDB.open('camplab_videos',1); r.onupgradeneeded=()=>r.result.createObjectStore('v'); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }catch(e){ rej(e); } }); return dbp; }
+  function tx(mode,fn){ return open().then(db=>new Promise((res,rej)=>{ const t=db.transaction('v',mode); const out=fn(t.objectStore('v')); t.oncomplete=()=>res(out&&out.result!==undefined?out.result:out); t.onerror=()=>rej(t.error); t.onabort=()=>rej(t.error); })); }
+  return {
+    put:(k,v)=>tx('readwrite',st=>st.put(v,k)),
+    get:k=>tx('readonly',st=>st.get(k)),
+    del:k=>tx('readwrite',st=>st.delete(k)),
+    keys:()=>tx('readonly',st=>st.getAllKeys())
+  };
+})();
+let savedVideoKeys = new Set();
+function refreshVideoKeys(){ return VideoDB.keys().then(ks=>{ savedVideoKeys=new Set(ks); paintOffBtns(); updateVideoFab(); }).catch(()=>{}); }
+function escA(t){ return String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function offBtn(key,title){
+  return `<div class="off-row" data-off="${escA(key)}" data-title="${escA(title)}"></div>`;
+}
+function paintOffBtns(root){
+  (root||document).querySelectorAll('.off-row[data-off]').forEach(el=>{
+    const has = savedVideoKeys.has(el.dataset.off);
+    const html = has
+      ? `<button type="button" class="off-btn saved" data-act="play">▶ オフラインで見る</button><button type="button" class="off-del" data-act="del" aria-label="保存した動画を削除">削除</button>`
+      : `<button type="button" class="off-btn" data-act="add">📥 オフライン用に動画を保存</button>`;
+    if(el.dataset.state !== String(has)){ el.innerHTML = html; el.dataset.state = String(has); }
+  });
+}
+new MutationObserver(()=>paintOffBtns()).observe(document.body,{childList:true,subtree:true});
+
+const vidPicker = document.createElement('input');
+vidPicker.type='file'; vidPicker.accept='video/*'; vidPicker.style.display='none';
+document.body.appendChild(vidPicker);
+let pickTarget=null;
+vidPicker.addEventListener('change', async ()=>{
+  const f = vidPicker.files && vidPicker.files[0]; vidPicker.value='';
+  if(!f || !pickTarget) return;
+  const {key,title} = pickTarget; pickTarget=null;
+  try{ if(navigator.storage && navigator.storage.persist) await navigator.storage.persist(); }catch(e){}
+  showBadgeToast('動画を保存しています…');
+  try{
+    await VideoDB.put(key,{blob:f, title, file:f.name, size:f.size, type:f.type||'video/mp4', date:Date.now()});
+    await refreshVideoKeys();
+    showBadgeToast('保存しました。電波がなくても見られます');
+  }catch(e){
+    showBadgeToast('保存できませんでした(端末の空き容量を確認してください)');
+  }
+});
+function fmtSize(b){ return b>1e9 ? (b/1e9).toFixed(1)+'GB' : Math.max(1,Math.round(b/1e6))+'MB'; }
+async function playOffline(key){
+  const v = await VideoDB.get(key).catch(()=>null);
+  if(!v){ showBadgeToast('動画が見つかりませんでした'); refreshVideoKeys(); return; }
+  const url = URL.createObjectURL(v.blob);
+  const m = document.getElementById('vidModal');
+  m.querySelector('.vid-title').textContent = v.title;
+  const box = m.querySelector('.vid-box');
+  box.innerHTML = `<video controls playsinline autoplay src="${url}"></video>`;
+  box.dataset.url = url;
+  m.classList.add('open'); document.body.style.overflow='hidden';
+}
+function closeVideo(){
+  const m=document.getElementById('vidModal'); if(!m.classList.contains('open')) return;
+  const box=m.querySelector('.vid-box'); const v=box.querySelector('video'); if(v) v.pause();
+  if(box.dataset.url) URL.revokeObjectURL(box.dataset.url);
+  box.innerHTML=''; m.classList.remove('open'); document.body.style.overflow='';
+}
+async function deleteVideo(key){
+  if(!confirmInline(key)) return;
+  await VideoDB.del(key).catch(()=>{}); await refreshVideoKeys(); renderVideoList();
+  showBadgeToast('動画を削除しました');
+}
+const delArmed={};
+function confirmInline(key){
+  if(delArmed[key] && Date.now()-delArmed[key]<4000){ delete delArmed[key]; return true; }
+  delArmed[key]=Date.now(); showBadgeToast('もう一度「削除」を押すと削除します'); return false;
+}
+document.addEventListener('click', e=>{
+  const b = e.target.closest && e.target.closest('[data-act]'); if(!b) return;
+  const row = b.closest('[data-off]'); if(!row) return;
+  const key=row.dataset.off, title=row.dataset.title;
+  if(b.dataset.act==='add'){ pickTarget={key,title}; vidPicker.click(); }
+  else if(b.dataset.act==='play'){ playOffline(key); }
+  else if(b.dataset.act==='del'){ deleteVideo(key); }
+});
+
+/* 保存した動画の一覧 */
+const secLabel={order:'設営手順',gear:'ギア',fire:'焚き火',rope:'ロープワーク',combo:'スタッキング',meshi:'キャンプ飯'};
+async function renderVideoList(){
+  const list=document.getElementById('vidList'); if(!list) return;
+  const keys=[...savedVideoKeys];
+  if(!keys.length){ list.innerHTML='<p class="vid-empty">まだ保存した動画はありません。<br>各カードの「📥 オフライン用に動画を保存」から追加できます。</p>'; document.getElementById('vidUsage').textContent=''; return; }
+  const items=[]; let total=0;
+  for(const k of keys){ const v=await VideoDB.get(k).catch(()=>null); if(v){ items.push([k,v]); total+=v.size||0; } }
+  items.sort((a,b)=>b[1].date-a[1].date);
+  list.innerHTML=items.map(([k,v])=>`<div class="vid-item" data-off="${escA(k)}" data-title="${escA(v.title)}">
+    <button type="button" class="vid-item-main" data-act="play"><span class="vid-sec">${secLabel[k.split(':')[0]]||''}</span><b>${escA(v.title)}</b><small>${fmtSize(v.size||0)}</small></button>
+    <button type="button" class="off-del" data-act="del">削除</button></div>`).join('');
+  let quota='';
+  try{ const est=await navigator.storage.estimate(); if(est&&est.quota) quota=` / 端末の空き目安 ${fmtSize(Math.max(0,est.quota-est.usage))}`; }catch(e){}
+  document.getElementById('vidUsage').textContent=`${items.length}本・合計 ${fmtSize(total)}${quota}`;
+}
+function updateVideoFab(){ const n=document.getElementById('vidFabCount'); if(n) n.textContent = savedVideoKeys.size ? savedVideoKeys.size : ''; }
+function openVideoList(){ document.getElementById('vidListModal').classList.add('open'); document.body.style.overflow='hidden'; renderVideoList(); }
+function closeVideoList(){ document.getElementById('vidListModal').classList.remove('open'); document.body.style.overflow=''; }
+document.addEventListener('click', e=>{
+  if(e.target.closest && e.target.closest('[data-open-videos]')){ e.preventDefault(); openVideoList(); }
+  if(e.target.id==='vidListModal' || (e.target.closest && e.target.closest('.vidlist-close'))) closeVideoList();
+  if(e.target.id==='vidModal' || (e.target.closest && e.target.closest('.vid-close'))) closeVideo();
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeVideo(); closeVideoList(); } });
+refreshVideoKeys();
+
+/* オフライン時の表示 */
+function updateOnline(){ document.body.classList.toggle('is-offline', !navigator.onLine); }
+window.addEventListener('online',updateOnline); window.addEventListener('offline',updateOnline); updateOnline();
+document.addEventListener('click', e=>{
+  if(navigator.onLine) return;
+  const yt=e.target.closest && e.target.closest('.yt[data-yt], a.video-link, a.order-video');
+  if(yt){ e.preventDefault(); e.stopImmediatePropagation(); showBadgeToast('オフライン中です。保存した動画は「▶ オフラインで見る」から再生できます'); }
+}, true);
+
+/* アプリ本体をオフラインでも開けるようにする */
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
+
 /* ---------------- フィードバック ---------------- */
 const PLAY_URL = "https://play.google.com/store/apps/details?id=app.vercel.camp_minolu1.twa";
 function openFeedback(){ document.getElementById('fbModal').classList.add('open'); document.body.style.overflow='hidden'; }
@@ -2299,6 +2473,7 @@ function renderMeshi(){
         <p class="gear-meta">${m.desc}</p>
         <div class="site-tags" style="margin:0 0 14px;"><span class="site-tag">${m.cat}</span></div>
         <a class="video-link" target="_blank" href="${meshiHref(m)}">作り方動画を見る →</a>
+        ${offBtn('meshi:'+m.name, m.name)}
       </div>
     </div>
   `).join('');
